@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SG & Melaka 2026</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SG Trip">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiU0cgJiBNZWxha2EgVHJpcCAyMDI2Iiwic2hvcnRfbmFtZSI6IlNHIFRyaXAiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzBmMTcyYSIsInRoZW1lX2NvbG9yIjoiIzBmMTcyYSJ9">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--card-alt:#334155;--accent:#f59e0b;--accent2:#06b6d4;--text:#f1f5f9;--muted:#94a3b8;--bino:#10b981}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--card-alt);border-radius:4px}
+.alt-card{background:var(--card-alt);border-left:3px solid var(--accent)}
+.bino-alert{background:linear-gradient(135deg,#064e3b,#065f46);border:1px solid var(--bino)}
+.time-dot{width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);flex-shrink:0;z-index:1}
+.time-line{position:absolute;left:5px;top:12px;bottom:0;width:2px;background:#334155}
+.fade-in{animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.day-chip{display:inline-flex;align-items:center;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
+.day-chip.active{background:var(--accent);color:#0f172a}
+.day-chip:not(.active){background:var(--card);color:var(--muted)}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0;font-size:10px;color:var(--muted);cursor:pointer;transition:color .2s;flex:1}
+.nav-btn.active{color:var(--accent)}
+.loc-link{color:var(--accent2);text-decoration:none;border-bottom:1px dotted var(--accent2);transition:opacity .2s}
+.loc-link:active{opacity:.6}
+.tip-box{background:#1a1a2e;border:1px solid #312e81;border-radius:8px;padding:8px 10px;font-size:12px;color:#a5b4fc;margin-top:6}
+.loc-pill{display:inline-flex;align-items:center;gap:4px;background:#0f172a;border:1px solid #334155;border-radius:6px;padding:3px 8px;font-size:11px;color:var(--accent2);text-decoration:none;margin:2px}
+.loc-pill:active{opacity:.6}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const{useState,useEffect,useRef,Fragment}=React;
+const mapsUrl=q=>`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+const MapLink=({place,children})=><a href={mapsUrl(place)} target="_blank" rel="noopener" className="loc-link">{children||place}</a>;
+const MapPill=({place,children})=><a href={mapsUrl(place)} target="_blank" rel="noopener" className="loc-pill">{children} ↗</a>;
+
+const DAYS=[
+{
+  id:1,date:"Fri 27 Feb",title:"Arrival & The Parade",emoji:"✈️",
+  hotel:"Hotel Waterloo",hotelAddr:"78 Waterloo St, Singapore",
+  part:"Part 1: Arts & Heritage Base",
+  dayLocations:[["Changi Airport Singapore","Changi Airport"],["Fort Canning MRT Singapore","Fort Canning MRT"],["Hotel Waterloo 78 Waterloo St Singapore","Hotel Waterloo"],["Albert Centre Market Singapore","Albert Centre"],["SISTIC Raffles City Singapore","SISTIC Raffles City"],["F1 Pit Building Singapore","F1 Pit Building"],["Helix Bridge Singapore","Helix Bridge"],["Mama Diam Singapore","Mama Diam"]],
+  events:[
+    {time:"11:00 AM",title:"Arrival & Check-In",desc:"Arrive Changi Airport. Take MRT to Fort Canning MRT (DT20), walk 10 min to Hotel Waterloo to drop luggage.",
+      places:[["Changi Airport Singapore","Changi Airport"],["Fort Canning MRT Singapore","Fort Canning MRT (DT20)"],["Hotel Waterloo 78 Waterloo St Singapore","Hotel Waterloo"]],icon:"✈️",
+      alts:{rain:"Take a Grab taxi directly from the airport.",tired:"Grab a coffee at the airport before heading to the city.",skip:"Detour to Jewel Changi to see the waterfall first."},
+      altPlaces:[["Jewel Changi Airport","Jewel Changi"]]},
+    {time:"2:00 PM",title:"Late Local Lunch",desc:"Walk to Albert Centre Market (2 min from hotel) for an authentic, cheap hawker start.",
+      places:[["Albert Centre Market Singapore","Albert Centre Market"]],icon:"🍜",
+      alts:{rain:"Eat inside the adjacent Bugis+ mall.",tired:"Grab takeaway and eat in the hotel room.",skip:"Walk to Hjh Maimunah for Nasi Padang instead."},
+      altPlaces:[["Bugis+ Singapore","Bugis+"],["Hjh Maimunah Singapore","Hjh Maimunah"]]},
+    {time:"4:00 PM",title:"Buy Chingay Tickets",desc:"Walk 8 min to Raffles City (Level 3) SISTIC counter. Buy physical tickets for the Chingay Parade.",
+      places:[["SISTIC Raffles City Singapore","SISTIC Raffles City (Level 3)"]],icon:"🎫",
+      alts:{rain:"Use the underground MRT tunnels to walk there dry.",tired:"Call the SISTIC hotline (+65 6348 5555) from your hotel bed.",skip:"Grab a beer at the historic CHIJMES courtyard instead."},
+      altPlaces:[["CHIJMES Singapore","CHIJMES"]],
+      tip:"SISTIC Hotline: +65 6348 5555"},
+    {time:"7:30 PM",title:"Chingay Parade",desc:"Head to F1 Pit Building. Theme: WISH. If no tickets, watch the massive floats from the Helix Bridge for free.",
+      places:[["F1 Pit Building Singapore","F1 Pit Building"],["Helix Bridge Singapore","Helix Bridge"]],icon:"🎆",
+      alts:{rain:"Wear ponchos; the parade continues in the rain!",tired:"Watch the Marina Bay light show from a quiet bench instead.",skip:"Get high-end cocktails at Atlas Bar."},
+      altPlaces:[["Marina Bay Promenade Singapore","Marina Bay Promenade"],["Atlas Bar Singapore","Atlas Bar"]]},
+    {time:"Late Night",title:"Mama Diam",desc:"Post-parade drinks at this legendary no-frills bar. Cheap beers, local vibes, open late.",
+      places:[["Mama Diam Singapore","Mama Diam"]],icon:"🍺",
+      alts:{rain:"Take a Grab straight there.",tired:"Head back to the hotel and rest.",skip:"Grab a nightcap at CHIJMES courtyard."},
+      altPlaces:[["CHIJMES Singapore","CHIJMES"]],
+      tip:"No-frills legend · Cheap beers · Open late"}
+  ]
+},
+{
+  id:2,date:"Sat 28 Feb",title:"Birds & Little India Deep Dive",emoji:"🦜",
+  hotel:"Hotel Waterloo",hotelAddr:"78 Waterloo St, Singapore",
+  dayLocations:[["Bird Paradise Mandai Singapore","Bird Paradise"],["Serangoon Road Little India Singapore","Serangoon Road"],["Sri Veeramakaliamman Temple Singapore","Sri Veeramakaliamman Temple"],["House of Tan Teng Niah Singapore","House of Tan Teng Niah"],["Mustafa Centre Singapore","Mustafa Centre"],["Sultan Mosque Singapore","Sultan Mosque"],["Zam Zam Restaurant Singapore","Zam Zam Restaurant"],["Standing Sushi Bar Odeon Towers Singapore","Standing Sushi Bar"]],
+  events:[
+    {time:"9:00 AM",title:"Breakfast & Head to Mandai",desc:"Breakfast at hotel. MRT to Khatib (NS14), then Mandai Shuttle to Bird Paradise.",
+      places:[["Khatib MRT Singapore","Khatib MRT (NS14)"],["Bird Paradise Mandai Singapore","Bird Paradise"]],icon:"🥐",
+      tip:"MRT → Khatib (NS14) → Mandai Shuttle"},
+    {time:"10:00 AM",title:"Bird Paradise",desc:"Predators on Wings show at 10 AM! Huge walk-in aviaries with free-flying birds.",
+      places:[["Bird Paradise Mandai Singapore","Bird Paradise"]],icon:"🦅",bino:"Use your Crivit 12x36 for the Predators on Wings show!",
+      alts:{rain:"Spend the morning inside the massive indoor Penguin Cove.",tired:"Take the internal park tram instead of walking the aviaries.",skip:"Go to Sungei Buloh Wetland Reserve instead."},
+      altPlaces:[["Sungei Buloh Wetland Reserve Singapore","Sungei Buloh"]]},
+    {time:"3:00 PM",title:"Little India Deep Dive",desc:"Immerse in minority culture. Walk Serangoon Road, visit Sri Veeramakaliamman Temple, see the colorful House of Tan Teng Niah, and explore the chaotic Mustafa Centre (24/7!).",
+      places:[["Serangoon Road Little India Singapore","Serangoon Road"],["Sri Veeramakaliamman Temple Singapore","Sri Veeramakaliamman Temple"],["House of Tan Teng Niah Singapore","House of Tan Teng Niah"],["Mustafa Centre Singapore","Mustafa Centre"]],icon:"🪷",
+      alts:{rain:"Spend hours inside the 24/7 Mustafa Centre.",tired:"Sit at a local kopitiam and drink Teh Tarik.",skip:"Head to Kampong Glam early instead."}},
+    {time:"6:30 PM",title:"Kampong Glam & Dinner",desc:"Walk to Kampong Glam. See Sultan Mosque, Haji Lane murals, then eat legendary Murtabak at Zam Zam (S$8).",
+      places:[["Sultan Mosque Singapore","Sultan Mosque"],["Haji Lane Singapore","Haji Lane"],["Zam Zam Restaurant Singapore","Zam Zam Restaurant"]],icon:"🥘",
+      alts:{rain:"Take a Grab directly to the restaurant.",tired:"Order Zam Zam delivery via Grab app to the hotel.",skip:"Stay in Little India and eat at Tekka Centre."},
+      altPlaces:[["Tekka Centre Singapore","Tekka Centre"]],
+      tip:"Murtabak ~S$8 · Zam Zam since 1908"},
+    {time:"8:00 PM",title:"Standing Sushi Bar",desc:"Odeon Towers. Famous S$2 sake and S$5 beers. Get there before 21:00 closing! Perfect Saturday night wind-down.",
+      places:[["Standing Sushi Bar Odeon Towers Singapore","Standing Sushi Bar (Odeon Towers)"]],icon:"🍣",
+      alts:{rain:"It's indoors — perfect rainy night spot.",tired:"Skip it, head back to the hotel.",skip:"Late-night drinks at Mama Diam instead."},
+      altPlaces:[["Mama Diam Singapore","Mama Diam"]],
+      tip:"⚠️ Closes at 21:00! · S$2 sake · S$5 beers"}
+  ]
+},
+{
+  id:3,date:"Sun 1 Mar",title:"Mass, Chinatown & Gardens",emoji:"⛪",
+  hotel:"Hotel Waterloo",hotelAddr:"78 Waterloo St, Singapore",
+  dayLocations:[["Cathedral of the Good Shepherd Singapore","Cathedral"],["Pagoda Street Chinatown Singapore","Pagoda Street"],["Buddha Tooth Relic Temple Singapore","Buddha Tooth Relic Temple"],["Sri Mariamman Temple Singapore","Sri Mariamman Temple"],["Chinatown Food Street Singapore","Chinatown Food Street"],["Funan Mall Singapore","Funan Mall"],["Marina Bay Sands Singapore","Marina Bay Sands"],["Gardens by the Bay Singapore","Gardens by the Bay"],["Supertree Grove Singapore","Supertree Grove"]],
+  events:[
+    {time:"9:00 AM",title:"Breakfast at Hotel",desc:"Leisurely start. Breakfast included.",icon:"🥐"},
+    {time:"10:30 AM",title:"Sunday Mass",desc:"Cathedral of the Good Shepherd. Beautiful colonial-era church, 10-min walk from hotel.",
+      places:[["Cathedral of the Good Shepherd Singapore","Cathedral of the Good Shepherd"]],icon:"⛪",
+      alts:{rain:"It's indoors — go regardless.",tired:"Attend but sit near the back to leave early if needed.",skip:"Grab coffee at a local kopitiam."}},
+    {time:"12:30 PM",title:"Chinatown Deep Dive",desc:"Explore Chinese minority heritage. Walk Pagoda Street, visit the massive Buddha Tooth Relic Temple, see Sri Mariamman Temple (oldest Hindu temple in Singapore, right in Chinatown!). Eat at Chinatown Food Street.",
+      places:[["Pagoda Street Chinatown Singapore","Pagoda Street"],["Buddha Tooth Relic Temple Singapore","Buddha Tooth Relic Temple"],["Sri Mariamman Temple Singapore","Sri Mariamman Temple"],["Chinatown Food Street Singapore","Chinatown Food Street"],["Chinatown Complex Singapore","Chinatown Complex"]],icon:"🏮",
+      alts:{rain:"Eat and shop inside Chinatown Complex — all covered.",tired:"Just do the temples and sit at a traditional tea house.",skip:"Walk the Henderson Waves bridge instead."},
+      altPlaces:[["Henderson Waves Singapore","Henderson Waves"],["Chinatown Complex Singapore","Chinatown Complex"]]},
+    {time:"3:30 PM",title:"Funan Digital Life Mall",desc:"Tech shopping detour! Great spot to browse robots, gadgets, drones, and electronics.",
+      places:[["Funan Mall Singapore","Funan Digital Life Mall"]],icon:"🤖",
+      alts:{rain:"Perfect — it's fully indoors!",tired:"Skip it, head straight to Marina Bay.",skip:"Walk the Southern Ridges / Henderson Waves instead."},
+      altPlaces:[["Southern Ridges Singapore","Southern Ridges"],["Henderson Waves Singapore","Henderson Waves"]]},
+    {time:"6:00 PM",title:"Marina Bay & Gardens by the Bay",desc:"Walk through Marina Bay Sands to Gardens by the Bay. Find a spot under the Supertree Grove for the free Garden Rhapsody light show at 19:45.",
+      places:[["Marina Bay Sands Singapore","Marina Bay Sands"],["Gardens by the Bay Singapore","Gardens by the Bay"],["Supertree Grove Singapore","Supertree Grove"]],icon:"🌟",
+      alts:{rain:"Watch from inside the MBS shopping mall windows.",tired:"Lie flat on the grass under the Supertrees and relax.",skip:"Get a rooftop beer at Mr. Punch Public House instead."},
+      altPlaces:[["Mr Punch Public House Singapore","Mr. Punch Public House"]],
+      tip:"Garden Rhapsody light show: FREE at 19:45 & 20:45 nightly"}
+  ]
+},
+{
+  id:4,date:"Mon 2 Mar",title:"The Bus to History",emoji:"🚌",
+  hotel:"The Majestic Malacca",hotelAddr:"188 Jln Bunga Raya, Melaka",
+  part:"Part 2: Historic Splurge",
+  dayLocations:[["Queen Street Bus Terminal Singapore","Queen Street Terminal"],["Melaka Sentral Bus Terminal","Melaka Sentral"],["The Majestic Malacca 188 Jln Bunga Raya","The Majestic Malacca"],["Dutch Square Melaka","Dutch Square"],["Pak Putra Tandoori Melaka","Pak Putra Tandoori"],["Reggae on the River Melaka","Reggae on the River"]],
+  events:[
+    {time:"8:30 AM",title:"Breakfast & Checkout",desc:"Check out of Hotel Waterloo.",places:[["Hotel Waterloo 78 Waterloo St Singapore","Hotel Waterloo"]],icon:"🧳"},
+    {time:"9:00 AM",title:"Walk to Queen Street Terminal",desc:"Short walk from the hotel to the bus terminal.",places:[["Queen Street Bus Terminal Singapore","Queen Street Terminal"]],icon:"🚶"},
+    {time:"11:00 AM",title:"KKKL Express Bus to Melaka",desc:"Queen Street → Melaka Sentral (4–4.5 hrs). Passport required at the border!",
+      places:[["Queen Street Bus Terminal Singapore","Queen Street Terminal"],["Melaka Sentral Bus Terminal","Melaka Sentral"]],icon:"🚌",alert:"Passport required!",
+      alts:{rain:"Take a Grab taxi to the bus terminal.",tired:"Sleep the entire way on the Super VIP reclining seats.",skip:"Take the later 1:30 PM bus if you want more time in Singapore."},
+      tip:"Also consider 707 Inc bus · Super VIP seats recline fully"},
+    {time:"3:00 PM",title:"Check-in & Dutch Square",desc:"Check into The Majestic Malacca (1920s mansion). Book Historian Tour at reception! Then walk to Dutch Square (Red Square).",
+      places:[["The Majestic Malacca 188 Jln Bunga Raya","The Majestic Malacca"],["Dutch Square Melaka","Dutch Square"]],icon:"🏨",alert:"Book Historian Tour!",
+      alts:{rain:"Visit the Baba Nyonya Heritage Museum.",tired:"Take a Melaka River Cruise boat.",skip:"Have coffee at Geographer Cafe."},
+      altPlaces:[["Baba Nyonya Heritage Museum Melaka","Baba Nyonya Museum"],["Melaka River Cruise","Melaka River Cruise"],["Geographer Cafe Melaka","Geographer Cafe"]]},
+    {time:"7:30 PM",title:"Tandoori & Reggae",desc:"Dinner at Pak Putra Tandoori — legendary roadside tandoori on banana leaf. Then beers at Reggae on the River.",
+      places:[["Pak Putra Tandoori Melaka","Pak Putra Tandoori"],["Reggae on the River Melaka","Reggae on the River"]],icon:"🍗",
+      alts:{rain:"Eat at the hotel's luxury restaurant.",tired:"Order room service at The Majestic.",skip:"Eat street food at the Jonker Street Night Market."},
+      altPlaces:[["Jonker Street Night Market Melaka","Jonker Street Night Market"]]}
+  ]
+},
+{
+  id:5,date:"Tue 3 Mar",title:"Deep Melaka",emoji:"📜",
+  hotel:"The Majestic Malacca",hotelAddr:"188 Jln Bunga Raya, Melaka",
+  dayLocations:[["The Majestic Malacca 188 Jln Bunga Raya","The Majestic Malacca"],["Poh Piah Lwee Melaka","Poh Piah Lwee"],["Hoe Kee Chicken Rice Ball Melaka","Hoe Kee"],["St Pauls Hill Melaka","St. Paul's Hill"],["Masjid Selat Melaka","Floating Mosque"],["Jonker Street Melaka","Jonker Street"]],
+  events:[
+    {time:"9:00 AM",title:"Breakfast at The Majestic",desc:"Included with your stay.",icon:"🥐"},
+    {time:"10:30 AM",title:"Majestic Historian Tour",desc:"Pre-booked guided heritage walk through Melaka's history.",
+      places:[["The Majestic Malacca 188 Jln Bunga Raya","The Majestic Malacca"]],icon:"🎓",
+      alts:{rain:"Visit the indoor Baba Nyonya Heritage Museum instead.",tired:"Read a book in the hotel's stunning library.",skip:"Take a Melaka River Cruise boat."},
+      altPlaces:[["Baba Nyonya Heritage Museum Melaka","Baba Nyonya Museum"],["Melaka River Cruise","Melaka River Cruise"]]},
+    {time:"1:00 PM",title:"Lunch & St. Paul's Hill",desc:"Eat at Poh Piah Lwee (pork lard spring rolls) or Hoe Kee Chicken Rice Balls. Then climb St. Paul's Hill for the view.",
+      places:[["Poh Piah Lwee Melaka","Poh Piah Lwee"],["Hoe Kee Chicken Rice Ball Melaka","Hoe Kee Chicken Rice Balls"],["St Pauls Hill Melaka","St. Paul's Hill"]],icon:"🥟"},
+    {time:"3:00 PM",title:"Majestic Journey Spa",desc:"In-hotel spa treatment. Pure relaxation and luxury.",
+      places:[["The Majestic Malacca Spa","Majestic Spa"]],icon:"💆",
+      alts:{rain:"Enjoy the luxury hotel spa and pool all afternoon!",tired:"Enjoy the luxury hotel spa and pool all afternoon!",skip:"Enjoy the luxury hotel spa and pool all afternoon!"}},
+    {time:"Sunset",title:"Masjid Selat (Floating Mosque)",desc:"Grab taxi (RM10) to the Floating Mosque. Absolutely stunning at sunset over the water.",
+      places:[["Masjid Selat Melaka","Masjid Selat (Floating Mosque)"]],icon:"🌅",
+      alts:{rain:"Skip sunset; go eat traditional Nyonya Kuih desserts.",tired:"Watch the river boats from the hotel pool.",skip:"Have early evening beers at Geographer Cafe."},
+      altPlaces:[["Geographer Cafe Melaka","Geographer Cafe"]],
+      tip:"Grab fare: ~RM10 each way"},
+    {time:"Night",title:"Jonker Street Evening",desc:"Explore cafés, street food, souvenirs. End at Geographer Cafe or Reggae on the River.",
+      places:[["Jonker Street Melaka","Jonker Street"],["Geographer Cafe Melaka","Geographer Cafe"],["Reggae on the River Melaka","Reggae on the River"]],icon:"🏮"}
+  ]
+},
+{
+  id:6,date:"Wed 4 Mar",title:"Return & Sentosa",emoji:"🏖️",
+  hotel:"M Social Hotel",hotelAddr:"90 Robertson Quay, Clarke Quay, Singapore",
+  part:"Part 3: The River & Nightlife Base",
+  dayLocations:[["Batu Berendam Herons Melaka","Batu Berendam"],["M Social Hotel Robertson Quay Singapore","M Social Hotel"],["Sentosa Island Singapore","Sentosa Island"],["Palawan Beach Sentosa Singapore","Palawan Beach"],["SEA Aquarium Sentosa Singapore","S.E.A. Aquarium"],["Robertson Quay Singapore","Robertson Quay"]],
+  events:[
+    {time:"7:00 AM",title:"Dawn Birding at Batu Berendam",desc:"Early Grab to the heron colony. Fantastic birding at dawn.",
+      places:[["Batu Berendam Herons Melaka","Batu Berendam Herons"]],icon:"🐦",optional:true,
+      bino:"Use your Crivit 12x36 to spot Asian Openbill storks!",
+      alts:{rain:"Sleep in and enjoy the luxury hotel bed!",tired:"Sleep in and enjoy the luxury hotel bed!",skip:"Sleep in and enjoy the luxury hotel bed!"}},
+    {time:"9:00 AM",title:"Breakfast & Checkout",desc:"Last breakfast at The Majestic. Check out.",icon:"🧳"},
+    {time:"11:00 AM",title:"Bus back to Singapore",desc:"Melaka Sentral → Singapore. Same route in reverse.",places:[["Melaka Sentral Bus Terminal","Melaka Sentral"]],icon:"🚌"},
+    {time:"3:30 PM",title:"Check-in: M Social Hotel",desc:"Robertson Quay riverside location. Drop bags, freshen up.",
+      places:[["M Social Hotel Robertson Quay Singapore","M Social Hotel"]],icon:"🏨",
+      alts:{rain:"Relax in the vibrant M Social lobby/bar.",tired:"Nap in the room.",skip:"Take an afternoon stroll along the Singapore River."}},
+    {time:"5:00 PM",title:"Sentosa Island",desc:"Take the Sentosa Express monorail or walk across the boardwalk. Enjoy Palawan Beach, walk around, or visit the S.E.A. Aquarium.",
+      places:[["Sentosa Island Singapore","Sentosa Island"],["Palawan Beach Sentosa Singapore","Palawan Beach"],["SEA Aquarium Sentosa Singapore","S.E.A. Aquarium"]],icon:"🏖️",
+      alts:{rain:"Head to the indoor S.E.A. Aquarium.",tired:"Just walk the beach boardwalk and chill.",skip:"Explore Robertson Quay and Clarke Quay instead."},
+      altPlaces:[["Clarke Quay Singapore","Clarke Quay"]],
+      tip:"Sentosa Express from VivoCity · Free entry to island after 4 PM (check)"},
+    {time:"8:30 PM",title:"Dinner at Robertson Quay",desc:"Walk back to the hotel neighborhood. Plenty of riverside restaurants and bars walking distance from M Social.",
+      places:[["Robertson Quay Singapore restaurants","Robertson Quay"],["Clarke Quay Singapore","Clarke Quay"]],icon:"🍽️",
+      alts:{rain:"Eat at the M Social hotel restaurant.",tired:"Order delivery to the room.",skip:"Explore Tiong Bahru for a local dinner."},
+      altPlaces:[["Tiong Bahru Singapore","Tiong Bahru"]]}
+  ]
+},
+{
+  id:7,date:"Thu 5 Mar",title:"MacRitchie, Island & East Coast",emoji:"🌿",
+  hotel:"M Social Hotel",hotelAddr:"90 Robertson Quay, Clarke Quay, Singapore",
+  dayLocations:[["MacRitchie TreeTop Walk Singapore","MacRitchie TreeTop Walk"],["Changi Point Ferry Terminal Singapore","Changi Point Ferry"],["Pulau Ubin Singapore","Pulau Ubin"],["Chek Jawa Wetlands Pulau Ubin","Chek Jawa"],["Joo Chiat Singapore","Joo Chiat"],["Koon Seng Road Singapore","Koon Seng Road"],["328 Katong Laksa Singapore","328 Katong Laksa"],["Coq and Balls Kim Tian Road Singapore","Coq & Balls"]],
+  events:[
+    {time:"7:30 AM",title:"Breakfast & MacRitchie TreeTop Walk",desc:"Early breakfast at hotel. Head to MacRitchie Reservoir for the 250m suspension bridge through the jungle canopy. Go early to beat the heat!",
+      places:[["MacRitchie TreeTop Walk Singapore","MacRitchie TreeTop Walk"]],icon:"🌿",
+      bino:"Scan the canopy for long-tailed macaques and drongos!",
+      alts:{rain:"Cancel hike; take a bumboat to Pulau Ubin later or visit Asian Civilisations Museum.",tired:"Walk the flat reservoir boardwalks only; skip the steep bridge hike.",skip:"Sleep in and head straight to Pulau Ubin."},
+      altPlaces:[["National Orchid Garden Singapore Botanic Gardens","National Orchid Garden"],["Asian Civilisations Museum Singapore","Asian Civilisations Museum"]]},
+    {time:"12:00 PM",title:"Pulau Ubin Island",desc:"MRT to Changi Point Ferry Terminal. Take the S$4 bumboat to Pulau Ubin. Rent a bike and ride to the Chek Jawa Wetlands.",
+      places:[["Changi Point Ferry Terminal Singapore","Changi Point Ferry Terminal"],["Pulau Ubin Singapore","Pulau Ubin"],["Chek Jawa Wetlands Pulau Ubin","Chek Jawa Wetlands"]],icon:"🏝️",
+      bino:"Essential here for spotting wild hornbills and otters!",
+      alts:{rain:"Cancel island; visit the Asian Civilisations Museum.",tired:"Skip the island; explore Tiong Bahru Market for lunch.",skip:"Go to Sungei Buloh Wetland Reserve instead."},
+      altPlaces:[["Asian Civilisations Museum Singapore","Asian Civilisations Museum"],["Tiong Bahru Market Singapore","Tiong Bahru Market"],["Sungei Buloh Wetland Reserve Singapore","Sungei Buloh"]],
+      tip:"Bumboat: S$4 · Bike rental on island · Last boat back ~5 PM"},
+    {time:"4:00 PM",title:"Katong / Joo Chiat",desc:"Head east. Walk Joo Chiat Road and see the famous Peranakan pastel shophouses on Koon Seng Road.",
+      places:[["Koon Seng Road Singapore","Koon Seng Road"],["Joo Chiat Singapore","Joo Chiat"]],icon:"🏘️",
+      alts:{rain:"Hop between cafes on East Coast Road.",tired:"Grab a coffee at a heritage bakery.",skip:"Explore Tiong Bahru Market closer to the city."},
+      altPlaces:[["East Coast Road Singapore","East Coast Road"],["Tiong Bahru Market Singapore","Tiong Bahru Market"]]},
+    {time:"7:00 PM",title:"Farewell Dinner: 328 Katong Laksa",desc:"The iconic spicy coconut noodle soup. A Singapore must-eat.",
+      places:[["328 Katong Laksa Singapore","328 Katong Laksa"]],icon:"🍜",
+      alts:{rain:"Take a Grab directly between locations.",tired:"Head back to Robertson Quay early.",skip:"Have farewell Satay at Lau Pa Sat instead."},
+      altPlaces:[["Lau Pa Sat Singapore","Lau Pa Sat"]]},
+    {time:"9:00 PM",title:"Farewell Drinks: Coq & Balls",desc:"A local Tiong Bahru legend tucked under public housing. No tourists, just great vibes and fair prices.",
+      places:[["Coq and Balls Kim Tian Road Singapore","Coq & Balls (Kim Tian Rd)"]],icon:"🍺",
+      alts:{rain:"Drinks at Clarke Quay (walking distance from M Social).",tired:"Drink at the M Social hotel bar.",skip:"Walk along Robertson Quay riverside."},
+      altPlaces:[["Clarke Quay Singapore","Clarke Quay"]],
+      tip:"Kim Tian Rd, Tiong Bahru · Hidden gem under HDB flats"}
+  ]
+},
+{
+  id:8,date:"Fri 6 Mar",title:"Departure",emoji:"🛫",
+  hotel:"M Social Hotel",hotelAddr:"90 Robertson Quay, Clarke Quay, Singapore",
+  dayLocations:[["Changi Airport Singapore","Changi Airport"],["Jewel Changi Airport","Jewel Changi"]],
+  events:[
+    {time:"8:30 AM",title:"Final Breakfast & Checkout",desc:"Last breakfast at M Social Hotel. Check out.",icon:"🧳"},
+    {time:"10:00 AM",title:"Head to Changi Airport",desc:"Grab taxi (~S$25-30). Leave early — flight at 11:40 AM!",
+      places:[["Changi Airport Singapore","Changi Airport"]],icon:"✈️",alert:"Flight at 11:40 AM!",
+      alts:{rain:"Book the Grab 15 min earlier to account for traffic.",tired:"Sleep on the ride.",skip:"Don't skip this — you need to catch your flight!"},
+      tip:"Grab fare: ~S$25–30"},
+    {time:"10:45 AM",title:"Jewel Changi (If Time Allows)",desc:"Rain Vortex — world's tallest indoor waterfall. Only if you have time!",
+      places:[["Jewel Changi Airport","Jewel Changi"]],icon:"💎",optional:true},
+    {time:"11:40 AM",title:"Flight Departs",desc:"Safe travels home! ✈️",icon:"🛫"}
+  ]
+}
+];
+
+const ALL_LOCATIONS=[];
+DAYS.forEach(d=>{
+  d.events.forEach(e=>{
+    if(e.places) e.places.forEach(p=>{
+      if(!ALL_LOCATIONS.find(l=>l[0]===p[0])) ALL_LOCATIONS.push([...p,d.date,e.time,d.id]);
+    });
+    if(e.altPlaces) e.altPlaces.forEach(p=>{
+      if(!ALL_LOCATIONS.find(l=>l[0]===p[0])) ALL_LOCATIONS.push([...p,d.date,"Alt",d.id]);
+    });
+  });
+  if(d.dayLocations) d.dayLocations.forEach(p=>{
+    if(!ALL_LOCATIONS.find(l=>l[0]===p[0])) ALL_LOCATIONS.push([...p,d.date,"",d.id]);
+  });
+});
+
+const QUICK_REF=[
+  {title:"Hotels",icon:"🏨",items:[
+    {label:"Days 1–4: Hotel Waterloo (Handwritten Collection)",detail:"78 Waterloo St, Singapore",map:"Hotel Waterloo 78 Waterloo St Singapore"},
+    {label:"Days 4–6: The Majestic Malacca",detail:"188 Jln Bunga Raya, Melaka. Restored 1920s mansion.",map:"The Majestic Malacca 188 Jln Bunga Raya Melaka"},
+    {label:"Days 6–8: M Social Hotel",detail:"90 Robertson Quay, Clarke Quay, Singapore",map:"M Social Hotel Robertson Quay Singapore"}
+  ]},
+  {title:"Transport",icon:"🚇",items:[
+    {label:"Singapore MRT",detail:"Changi → Fort Canning (DT20). Khatib (NS14) for Mandai. Use contactless bank card."},
+    {label:"KKKL / 707 Inc Bus",detail:"Queen Street → Melaka Sentral (~4–4.5 hrs). Super VIP reclining seats.",map:"Queen Street Bus Terminal Singapore"},
+    {label:"Grab App",detail:"Ride-hailing in SG & Melaka. Download beforehand. Melaka fares ~RM10."},
+    {label:"Mandai Shuttle",detail:"From Khatib MRT to Bird Paradise."},
+    {label:"Sentosa Express",detail:"Monorail from VivoCity to Sentosa Island.",map:"Sentosa Express Singapore"},
+    {label:"Pulau Ubin Bumboat",detail:"S$4 from Changi Point Ferry Terminal. Last boat back ~5 PM.",map:"Changi Point Ferry Terminal Singapore"}
+  ]},
+  {title:"Must-Remember",icon:"⚠️",items:[
+    {label:"Passport",detail:"Required for Melaka bus crossing Day 4 AND return Day 6."},
+    {label:"Chingay Tickets",detail:"SISTIC Raffles City Level 3, Day 1 afternoon. Hotline: +65 6348 5555"},
+    {label:"Historian Tour",detail:"Book at The Majestic reception on Day 4 check-in."},
+    {label:"Sunday Mass 10:30 AM",detail:"Cathedral of the Good Shepherd, Day 3."},
+    {label:"All Hotels Include Breakfast",detail:"Don't double-book morning meals!"},
+    {label:"Standing Sushi Bar closes 21:00",detail:"Moved to Saturday evening (Day 2). Get there by 20:00."},
+    {label:"Garden Rhapsody",detail:"Free light show at Gardens by the Bay: 19:45 & 20:45 nightly."},
+    {label:"Pulau Ubin last boat ~5 PM",detail:"Don't miss the last bumboat back!"}
+  ]},
+  {title:"Gear",icon:"🔭",items:[
+    {label:"Crivit 12x36 Binoculars",detail:"Bird Paradise (Day 2), MacRitchie (Day 7), Batu Berendam (Day 6), Pulau Ubin (Day 7)."},
+    {label:"Rain Poncho",detail:"Tropical weather. Essential for Chingay Parade and jungle walks."}
+  ]},
+  {title:"Minority Districts",icon:"🌏",items:[
+    {label:"Little India Deep Dive (Day 2)",detail:"Serangoon Rd, Sri Veeramakaliamman Temple, House of Tan Teng Niah, Mustafa Centre 24/7.",map:"Serangoon Road Little India Singapore"},
+    {label:"Chinatown Deep Dive (Day 3)",detail:"Pagoda St, Buddha Tooth Relic Temple, Sri Mariamman Temple, Chinatown Food Street, Chinatown Complex.",map:"Chinatown Singapore"},
+    {label:"Kampong Glam (Day 2)",detail:"Sultan Mosque, Haji Lane murals, Zam Zam.",map:"Kampong Glam Singapore"},
+    {label:"Katong / Joo Chiat (Day 7)",detail:"Peranakan shophouses, Koon Seng Road pastel facades.",map:"Joo Chiat Singapore"}
+  ]},
+  {title:"Bars & Nightlife",icon:"🍺",items:[
+    {label:"Mama Diam (Day 1)",detail:"No-frills legend. Cheap beers, local vibes, open late.",map:"Mama Diam Singapore"},
+    {label:"Standing Sushi Bar (Day 2, 8PM)",detail:"Odeon Towers. S$2 sake, S$5 beers. Closes 21:00!",map:"Standing Sushi Bar Odeon Towers Singapore"},
+    {label:"Atlas Bar (Day 1 Alt)",detail:"Art deco lobby. High-end cocktails.",map:"Atlas Bar Singapore"},
+    {label:"CHIJMES (Day 1 Alt)",detail:"Heritage courtyard drinks.",map:"CHIJMES Singapore"},
+    {label:"Mr. Punch Public House (Day 3 Alt)",detail:"Rooftop bar, nostalgic vibe.",map:"Mr Punch Public House Singapore"},
+    {label:"Reggae on the River (Day 4–5)",detail:"Melaka riverside. Chill vibes, local prices.",map:"Reggae on the River Melaka"},
+    {label:"Geographer Cafe (Day 5)",detail:"Iconic Jonker Street cafe.",map:"Geographer Cafe Melaka"},
+    {label:"Coq & Balls (Day 7)",detail:"Kim Tian Rd, Tiong Bahru. Hidden under HDB. No tourists.",map:"Coq and Balls Kim Tian Road Singapore"},
+    {label:"Clarke Quay",detail:"Walking distance from M Social.",map:"Clarke Quay Singapore"}
+  ]},
+  {title:"Key Food Spots",icon:"🍛",items:[
+    {label:"Albert Centre Market (Day 1)",detail:"2 min from Hotel Waterloo.",map:"Albert Centre Market Singapore"},
+    {label:"Hjh Maimunah (Day 1 Alt)",detail:"Famous Nasi Padang.",map:"Hjh Maimunah Singapore"},
+    {label:"Chinatown Food Street (Day 3)",detail:"Outdoor hawker street in Chinatown.",map:"Chinatown Food Street Singapore"},
+    {label:"Zam Zam Restaurant (Day 2)",detail:"Murtabak ~S$8. Since 1908.",map:"Zam Zam Restaurant Singapore"},
+    {label:"Tekka Centre (Day 2 Alt)",detail:"Little India hawker market.",map:"Tekka Centre Singapore"},
+    {label:"Pak Putra Tandoori (Day 4)",detail:"Melaka legend. Tandoori on banana leaf.",map:"Pak Putra Tandoori Melaka"},
+    {label:"Poh Piah Lwee (Day 5)",detail:"Pork lard spring rolls.",map:"Poh Piah Lwee Melaka"},
+    {label:"Hoe Kee (Day 5)",detail:"Chicken rice balls.",map:"Hoe Kee Chicken Rice Ball Melaka"},
+    {label:"Tiong Bahru Market (Day 7 Alt)",detail:"Legendary hawker lunch.",map:"Tiong Bahru Market Singapore"},
+    {label:"328 Katong Laksa (Day 7)",detail:"Iconic spicy coconut noodle soup.",map:"328 Katong Laksa Singapore"},
+    {label:"Lau Pa Sat (Day 7 Alt)",detail:"Satay Street supper.",map:"Lau Pa Sat Singapore"}
+  ]},
+  {title:"Shopping & Tech",icon:"🛍️",items:[
+    {label:"Funan Digital Life Mall (Day 3)",detail:"Tech, gadgets, robots, drones. Near Fort Canning.",map:"Funan Mall Singapore"},
+    {label:"Mustafa Centre (Day 2)",detail:"24/7 everything store in Little India.",map:"Mustafa Centre Singapore"},
+    {label:"Bugis+ / Bugis Junction",detail:"Near Hotel Waterloo. Indoor shopping.",map:"Bugis Junction Singapore"},
+    {label:"VivoCity",detail:"Harbourfront mega-mall. Gateway to Sentosa.",map:"VivoCity Singapore"}
+  ]},
+  {title:"Beaches & Nature",icon:"🏖️",items:[
+    {label:"Sentosa Island (Day 6)",detail:"Beaches, S.E.A. Aquarium, walks. Monorail from VivoCity.",map:"Sentosa Island Singapore"},
+    {label:"Palawan Beach (Day 6)",detail:"Southernmost point of continental Asia!",map:"Palawan Beach Sentosa Singapore"},
+    {label:"Pulau Ubin (Day 7)",detail:"Rustic island. Bumboat S$4, bike to Chek Jawa Wetlands.",map:"Pulau Ubin Singapore"},
+    {label:"MacRitchie TreeTop Walk (Day 7)",detail:"250m suspension bridge through jungle canopy.",map:"MacRitchie TreeTop Walk Singapore"},
+    {label:"Gardens by the Bay (Day 3)",detail:"Supertree Grove, free light show at 19:45.",map:"Gardens by the Bay Singapore"}
+  ]}
+];
+
+function AltsSection({alts,altPlaces}){
+  const[open,setOpen]=useState(false);
+  if(!alts) return null;
+  const allSame=alts.rain===alts.tired&&alts.tired===alts.skip;
+  return(
+    <div style={{marginTop:8}}>
+      <button onClick={()=>setOpen(!open)} style={{background:'none',border:'1px solid #475569',borderRadius:8,padding:'6px 12px',color:'#94a3b8',fontSize:12,cursor:'pointer',display:'flex',alignItems:'center',gap:6,width:'100%',justifyContent:'space-between'}}>
+        <span>Alternatives</span>
+        <span style={{transform:open?'rotate(180deg)':'rotate(0)',transition:'transform .2s',fontSize:10}}>▼</span>
+      </button>
+      {open&&(
+        <div className="fade-in" style={{marginTop:6,borderRadius:8,overflow:'hidden'}}>
+          {allSame?(
+            <div className="alt-card" style={{padding:'10px 12px',fontSize:13}}>
+              <span style={{marginRight:6}}>🌧️🥱🔄</span>{alts.rain}
+            </div>
+          ):(
+            <Fragment>
+              <div className="alt-card" style={{padding:'10px 12px',fontSize:13,borderBottom:'1px solid #1e293b'}}>
+                <span style={{marginRight:6}}>🌧️</span><strong style={{color:'#94a3b8'}}>Rain:</strong> {alts.rain}
+              </div>
+              <div className="alt-card" style={{padding:'10px 12px',fontSize:13,borderBottom:'1px solid #1e293b'}}>
+                <span style={{marginRight:6}}>🥱</span><strong style={{color:'#94a3b8'}}>Tired:</strong> {alts.tired}
+              </div>
+              <div className="alt-card" style={{padding:'10px 12px',fontSize:13}}>
+                <span style={{marginRight:6}}>🔄</span><strong style={{color:'#94a3b8'}}>Skip it:</strong> {alts.skip}
+              </div>
+            </Fragment>
+          )}
+          {altPlaces&&altPlaces.length>0&&(
+            <div style={{padding:'6px 10px',display:'flex',flexWrap:'wrap',gap:4,background:'#2d3748'}}>
+              {altPlaces.map((p,i)=><MapPill key={i} place={p[0]}>{p[1]}</MapPill>)}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function EventCard({event}){
+  return(
+    <div className="fade-in" style={{position:'relative',paddingLeft:28,paddingBottom:20,minHeight:40}}>
+      <div style={{position:'absolute',left:0,top:4}}>
+        <div className="time-dot"></div>
+        <div className="time-line"></div>
+      </div>
+      <div style={{background:'#1e293b',borderRadius:12,padding:'12px 14px',marginLeft:4}}>
+        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:8,flexWrap:'wrap'}}>
+          <div style={{display:'flex',alignItems:'center',gap:6,flexWrap:'wrap'}}>
+            <span style={{fontSize:11,color:'#f59e0b',fontWeight:700,fontFamily:'monospace',whiteSpace:'nowrap'}}>{event.time}</span>
+            {event.optional&&<span style={{fontSize:10,background:'#312e81',color:'#a5b4fc',padding:'1px 6px',borderRadius:4}}>Optional</span>}
+            {event.alert&&<span style={{fontSize:10,background:'#7f1d1d',color:'#fca5a5',padding:'1px 6px',borderRadius:4}}>⚠️ {event.alert}</span>}
+          </div>
+          <span style={{fontSize:18}}>{event.icon}</span>
+        </div>
+        <h3 style={{fontSize:15,fontWeight:700,margin:'4px 0 2px',lineHeight:1.3}}>{event.title}</h3>
+        <p style={{fontSize:13,color:'#cbd5e1',lineHeight:1.5,margin:0}}>{event.desc}</p>
+        {event.places&&(
+          <div style={{display:'flex',flexWrap:'wrap',gap:6,marginTop:8}}>
+            {event.places.map((p,i)=><MapLink key={i} place={p[0]}>{p[1]} →</MapLink>)}
+          </div>
+        )}
+        {event.bino&&(
+          <div className="bino-alert" style={{marginTop:8,padding:'8px 10px',borderRadius:8,fontSize:12,display:'flex',alignItems:'flex-start',gap:6}}>
+            <span style={{fontSize:16}}>🔭</span>
+            <span><strong>Binocular Alert:</strong> {event.bino}</span>
+          </div>
+        )}
+        {event.tip&&(
+          <div className="tip-box">
+            <span style={{marginRight:4}}>💡</span>{event.tip}
+          </div>
+        )}
+        <AltsSection alts={event.alts} altPlaces={event.altPlaces}/>
+      </div>
+    </div>
+  );
+}
+
+function DayLocationsBar({locations}){
+  if(!locations||!locations.length) return null;
+  return(
+    <div style={{margin:'0 0 16px',padding:'10px 12px',background:'#0d1117',borderRadius:10,border:'1px solid #1e293b'}}>
+      <div style={{fontSize:11,fontWeight:700,color:'#94a3b8',marginBottom:6}}>📍 TODAY'S LOCATIONS</div>
+      <div style={{display:'flex',flexWrap:'wrap',gap:4}}>
+        {locations.map((l,i)=><MapPill key={i} place={l[0]}>{l[1]}</MapPill>)}
+      </div>
+    </div>
+  );
+}
+
+function DayView({day}){
+  return(
+    <div className="fade-in" style={{padding:'0 16px 16px'}}>
+      {day.part&&(
+        <div style={{textAlign:'center',padding:'12px 0 4px'}}>
+          <span style={{fontSize:11,fontWeight:700,color:'#f59e0b',letterSpacing:2,textTransform:'uppercase'}}>{day.part}</span>
+        </div>
+      )}
+      <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12,padding:'8px 0 4px'}}>
+        <span style={{fontSize:28}}>{day.emoji}</span>
+        <div>
+          <h2 style={{fontSize:18,fontWeight:800,lineHeight:1.2}}>{day.title}</h2>
+          <p style={{fontSize:12,color:'#94a3b8',margin:0}}>{day.date}</p>
+        </div>
+      </div>
+      <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:14,padding:'8px 12px',background:'#1e1b4b',borderRadius:8,fontSize:12}}>
+        <span>🏨</span>
+        <MapLink place={day.hotelAddr}>{day.hotel}</MapLink>
+        <span style={{color:'#6366f1',fontSize:10}}>•</span>
+        <span style={{color:'#a5b4fc',fontSize:11,flex:1}}>{day.hotelAddr}</span>
+      </div>
+      {day.events.map((e,i)=><EventCard key={i} event={e}/>)}
+      <DayLocationsBar locations={day.dayLocations}/>
+    </div>
+  );
+}
+
+function ItineraryTab(){
+  const[activeDay,setActiveDay]=useState(1);
+  const scrollRef=useRef(null);
+  const contentRef=useRef(null);
+  const day=DAYS.find(d=>d.id===activeDay);
+  useEffect(()=>{
+    if(scrollRef.current){
+      const el=scrollRef.current.children[activeDay-1];
+      if(el) el.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+    }
+    if(contentRef.current) contentRef.current.scrollTop=0;
+  },[activeDay]);
+  return(
+    <div style={{display:'flex',flexDirection:'column',height:'100%'}}>
+      <div ref={scrollRef} style={{display:'flex',gap:6,padding:'10px 16px',overflowX:'auto',background:'#0f172a',borderBottom:'1px solid #1e293b',flexShrink:0}}>
+        {DAYS.map(d=>(
+          <div key={d.id} className={`day-chip ${d.id===activeDay?'active':''}`} onClick={()=>setActiveDay(d.id)}>
+            <span style={{marginRight:4}}>{d.emoji}</span>D{d.id}
+          </div>
+        ))}
+      </div>
+      <div ref={contentRef} style={{flex:1,overflowY:'auto',paddingTop:8,paddingBottom:8}}>
+        {day&&<DayView day={day}/>}
+        <div style={{display:'flex',justifyContent:'center',gap:12,padding:'8px 16px 20px'}}>
+          <button disabled={activeDay<=1} onClick={()=>setActiveDay(activeDay-1)} style={{background:activeDay<=1?'#1e293b':'#334155',color:activeDay<=1?'#475569':'#f1f5f9',border:'none',borderRadius:8,padding:'10px 20px',fontSize:13,fontWeight:600,cursor:activeDay<=1?'default':'pointer'}}>← Prev</button>
+          <button disabled={activeDay>=8} onClick={()=>setActiveDay(activeDay+1)} style={{background:activeDay>=8?'#1e293b':'#f59e0b',color:activeDay>=8?'#475569':'#0f172a',border:'none',borderRadius:8,padding:'10px 20px',fontSize:13,fontWeight:600,cursor:activeDay>=8?'default':'pointer'}}>Next →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LocationsTab(){
+  const[search,setSearch]=useState('');
+  const[filter,setFilter]=useState('all');
+  const cats={all:'All',sg:'Singapore',melaka:'Melaka',sentosa:'Sentosa'};
+  const filtered=ALL_LOCATIONS.filter(l=>{
+    const q=l[0].toLowerCase();
+    const matchSearch=l[1].toLowerCase().includes(search.toLowerCase());
+    if(filter==='sg') return matchSearch&&!q.includes('melaka')&&!q.includes('malacca')&&!q.includes('sentosa')&&!q.includes('ubin');
+    if(filter==='melaka') return matchSearch&&(q.includes('melaka')||q.includes('malacca'));
+    if(filter==='sentosa') return matchSearch&&q.includes('sentosa');
+    return matchSearch;
+  });
+  return(
+    <div style={{padding:16,height:'100%',overflowY:'auto'}}>
+      <h2 style={{fontSize:18,fontWeight:800,marginBottom:12}}>All Locations ({ALL_LOCATIONS.length})</h2>
+      <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search locations..." style={{width:'100%',padding:'10px 14px',borderRadius:10,border:'1px solid #334155',background:'#1e293b',color:'#f1f5f9',fontSize:14,marginBottom:10,outline:'none'}}/>
+      <div style={{display:'flex',gap:6,marginBottom:14,overflowX:'auto'}}>
+        {Object.entries(cats).map(([k,v])=>(
+          <button key={k} onClick={()=>setFilter(k)} style={{padding:'4px 12px',borderRadius:999,fontSize:12,fontWeight:600,border:'none',cursor:'pointer',background:filter===k?'#f59e0b':'#1e293b',color:filter===k?'#0f172a':'#94a3b8',whiteSpace:'nowrap',flexShrink:0}}>{v}</button>
+        ))}
+      </div>
+      <div style={{display:'flex',flexDirection:'column',gap:6}}>
+        {filtered.map((l,i)=>(
+          <a key={i} href={mapsUrl(l[0])} target="_blank" rel="noopener" style={{display:'flex',justifyContent:'space-between',alignItems:'center',background:'#1e293b',borderRadius:10,padding:'12px 14px',textDecoration:'none',color:'#f1f5f9'}}>
+            <div>
+              <div style={{fontSize:14,fontWeight:600}}>{l[1]}</div>
+              <div style={{fontSize:11,color:'#94a3b8',marginTop:2}}>{l[2]}{l[3]?' · '+l[3]:''}</div>
+            </div>
+            <span style={{color:'#06b6d4',fontSize:18}}>→</span>
+          </a>
+        ))}
+        {filtered.length===0&&<p style={{color:'#64748b',textAlign:'center',padding:20}}>No locations found.</p>}
+      </div>
+    </div>
+  );
+}
+
+function QuickRefTab(){
+  const[openSec,setOpenSec]=useState(null);
+  return(
+    <div style={{padding:16,height:'100%',overflowY:'auto'}}>
+      <h2 style={{fontSize:18,fontWeight:800,marginBottom:12}}>Quick Reference</h2>
+      <div style={{display:'flex',flexDirection:'column',gap:8}}>
+        {QUICK_REF.map((sec,i)=>(
+          <div key={i} style={{background:'#1e293b',borderRadius:12,overflow:'hidden'}}>
+            <button onClick={()=>setOpenSec(openSec===i?null:i)} style={{width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',padding:'14px 16px',background:'none',border:'none',color:'#f1f5f9',cursor:'pointer',fontSize:15,fontWeight:700}}>
+              <span>{sec.icon} {sec.title}</span>
+              <span style={{transform:openSec===i?'rotate(180deg)':'rotate(0)',transition:'transform .2s',fontSize:12,color:'#94a3b8'}}>▼</span>
+            </button>
+            {openSec===i&&(
+              <div className="fade-in" style={{padding:'0 16px 14px',display:'flex',flexDirection:'column',gap:8}}>
+                {sec.items.map((item,j)=>(
+                  <div key={j} style={{background:'#0f172a',borderRadius:8,padding:'10px 12px'}}>
+                    <div style={{fontSize:13,fontWeight:600}}>{item.label}</div>
+                    <div style={{fontSize:12,color:'#94a3b8',marginTop:2,lineHeight:1.4}}>{item.detail}</div>
+                    {item.map&&<div style={{marginTop:4}}><MapLink place={item.map}>Open in Maps →</MapLink></div>}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <div style={{marginTop:24,background:'#1e293b',borderRadius:12,padding:16}}>
+        <h3 style={{fontSize:14,fontWeight:700,marginBottom:8}}>🔭 Binocular Schedule (Crivit 12x36)</h3>
+        <div style={{display:'flex',flexDirection:'column',gap:6}}>
+          {[
+            ["Day 2","Bird Paradise — Predators on Wings show"],
+            ["Day 6 AM","Batu Berendam — Asian Openbill storks at dawn"],
+            ["Day 7 AM","MacRitchie — canopy macaques & drongos"],
+            ["Day 7 PM","Pulau Ubin — wild hornbills & otters"]
+          ].map((b,i)=>(
+            <div key={i} className="bino-alert" style={{padding:'8px 10px',borderRadius:8,fontSize:12}}>
+              <strong>{b[0]}:</strong> {b[1]}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function App(){
+  const[tab,setTab]=useState('itinerary');
+  return(
+    <div style={{maxWidth:480,margin:'0 auto',height:'100vh',display:'flex',flexDirection:'column'}}>
+      <header style={{background:'linear-gradient(135deg,#0f172a,#1e1b4b)',padding:'14px 16px 10px',textAlign:'center',borderBottom:'1px solid #1e293b',flexShrink:0}}>
+        <h1 style={{fontSize:16,fontWeight:800,letterSpacing:1}}>🇸🇬 SG & Melaka 2026 🇲🇾</h1>
+        <p style={{fontSize:11,color:'#94a3b8',marginTop:2}}>Feb 27 – Mar 6 · 8 Days · 2 Travelers</p>
+      </header>
+      <main style={{flex:1,overflow:'hidden',display:'flex',flexDirection:'column'}}>
+        {tab==='itinerary'&&<ItineraryTab/>}
+        {tab==='locations'&&<LocationsTab/>}
+        {tab==='quickref'&&<QuickRefTab/>}
+      </main>
+      <nav style={{background:'#0f172a',borderTop:'1px solid #1e293b',display:'flex',flexShrink:0,paddingBottom:'env(safe-area-inset-bottom)'}}>
+        {[
+          {id:'itinerary',label:'Itinerary',icon:'📅'},
+          {id:'locations',label:'Locations',icon:'📍'},
+          {id:'quickref',label:'Reference',icon:'📋'}
+        ].map(n=>(
+          <div key={n.id} className={`nav-btn ${tab===n.id?'active':''}`} onClick={()=>setTab(n.id)}>
+            <span style={{fontSize:20}}>{n.icon}</span>
+            <span>{n.label}</span>
+          </div>
+        ))}
+      </nav>
+    </div>
+  );
+}
+
+ReactDOM.render(<App/>,document.getElementById('root'));
+</script>
+</body>
+</html>
