@@ -3,595 +3,619 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>SG & Melaka 2026</title>
+<title>Zfc Field Guide</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SG Trip">
-<meta name="theme-color" content="#0f172a">
-<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiU0cgJiBNZWxha2EgVHJpcCAyMDI2Iiwic2hvcnRfbmFtZSI6IlNHIFRyaXAiLCJzdGFydF91cmwiOiIuIiwiZGlzcGxheSI6InN0YW5kYWxvbmUiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzBmMTcyYSIsInRoZW1lX2NvbG9yIjoiIzBmMTcyYSJ9">
+<meta name="apple-mobile-web-app-title" content="Zfc Guide">
+<meta name="theme-color" content="#09090b">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 <style>
-:root{--bg:#0f172a;--card:#1e293b;--card-alt:#334155;--accent:#f59e0b;--accent2:#06b6d4;--text:#f1f5f9;--muted:#94a3b8;--bino:#10b981}
+:root{--bg:#09090b;--card:#18181b;--card2:#27272a;--card3:#3f3f46;--accent:#eab308;--red:#ef4444;--cyan:#22d3ee;--green:#4ade80;--purple:#a78bfa;--text:#fafafa;--muted:#a1a1aa;--dim:#71717a}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--card-alt);border-radius:4px}
-.alt-card{background:var(--card-alt);border-left:3px solid var(--accent)}
-.bino-alert{background:linear-gradient(135deg,#064e3b,#065f46);border:1px solid var(--bino)}
-.time-dot{width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--bg);flex-shrink:0;z-index:1}
-.time-line{position:absolute;left:5px;top:12px;bottom:0;width:2px;background:#334155}
-.fade-in{animation:fadeIn .3s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.day-chip{display:inline-flex;align-items:center;padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
-.day-chip.active{background:var(--accent);color:#0f172a}
-.day-chip:not(.active){background:var(--card);color:var(--muted)}
-.nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0;font-size:10px;color:var(--muted);cursor:pointer;transition:color .2s;flex:1}
-.nav-btn.active{color:var(--accent)}
-.loc-link{color:var(--accent2);text-decoration:none;border-bottom:1px dotted var(--accent2);transition:opacity .2s}
-.loc-link:active{opacity:.6}
-.tip-box{background:#1a1a2e;border:1px solid #312e81;border-radius:8px;padding:8px 10px;font-size:12px;color:#a5b4fc;margin-top:6}
-.loc-pill{display:inline-flex;align-items:center;gap:4px;background:#0f172a;border:1px solid #334155;border-radius:6px;padding:3px 8px;font-size:11px;color:var(--accent2);text-decoration:none;margin:2px}
-.loc-pill:active{opacity:.6}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--card3);border-radius:4px}
+.fade{animation:f .25s ease}@keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.slide{animation:s .3s ease}@keyframes s{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.tag{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:.5px}
+.dial{background:#000;border:1px solid var(--card3);border-radius:12px;padding:10px 12px}
+.dial-label{font-size:9px;color:var(--dim);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
+.dial-val{font-family:'Courier New',monospace;font-size:14px;font-weight:700}
+.item-btn{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid #27272a;border-radius:16px;padding:14px 16px;color:var(--text);cursor:pointer;width:100%;text-align:left;transition:border-color .15s}
+.item-btn:active{border-color:var(--accent);background:#1c1c1e}
+.tab-btn{padding:6px 14px;border-radius:12px;font-size:13px;font-weight:600;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s}
+.tab-btn.on{background:var(--card2);color:var(--accent);border:1px solid var(--card3)}
+.tab-btn.off{background:transparent;color:var(--dim);border:1px solid transparent}
+.tip-card{background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.2);border-radius:14px;padding:14px}
+.why-card{background:rgba(255,255,255,.03);border:1px solid var(--card3);border-radius:14px;padding:14px}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const{useState,useEffect,useRef,Fragment}=React;
-const mapsUrl=q=>`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
-const MapLink=({place,children})=><a href={mapsUrl(place)} target="_blank" rel="noopener" className="loc-link">{children||place}</a>;
-const MapPill=({place,children})=><a href={mapsUrl(place)} target="_blank" rel="noopener" className="loc-pill">{children} ↗</a>;
+const{useState,useRef}=React;
 
-const DAYS=[
-{
-  id:1,date:"Fri 27 Feb",title:"Arrival & The Parade",emoji:"✈️",
-  hotel:"Hotel Waterloo",hotelAddr:"78 Waterloo St, Singapore",
-  part:"Part 1: Arts & Heritage Base",
-  dayLocations:[["Changi Airport Singapore","Changi Airport"],["Fort Canning MRT Singapore","Fort Canning MRT"],["Hotel Waterloo 78 Waterloo St Singapore","Hotel Waterloo"],["Albert Centre Market Singapore","Albert Centre"],["SISTIC Raffles City Singapore","SISTIC Raffles City"],["F1 Pit Building Singapore","F1 Pit Building"],["Helix Bridge Singapore","Helix Bridge"],["Mama Diam Singapore","Mama Diam"]],
-  events:[
-    {time:"11:00 AM",title:"Arrival & Check-In",desc:"Arrive Changi Airport. Take MRT to Fort Canning MRT (DT20), walk 10 min to Hotel Waterloo to drop luggage.",
-      places:[["Changi Airport Singapore","Changi Airport"],["Fort Canning MRT Singapore","Fort Canning MRT (DT20)"],["Hotel Waterloo 78 Waterloo St Singapore","Hotel Waterloo"]],icon:"✈️",
-      alts:{rain:"Take a Grab taxi directly from the airport.",tired:"Grab a coffee at the airport before heading to the city.",skip:"Detour to Jewel Changi to see the waterfall first."},
-      altPlaces:[["Jewel Changi Airport","Jewel Changi"]]},
-    {time:"2:00 PM",title:"Late Local Lunch",desc:"Walk to Albert Centre Market (2 min from hotel) for an authentic, cheap hawker start.",
-      places:[["Albert Centre Market Singapore","Albert Centre Market"]],icon:"🍜",
-      alts:{rain:"Eat inside the adjacent Bugis+ mall.",tired:"Grab takeaway and eat in the hotel room.",skip:"Walk to Hjh Maimunah for Nasi Padang instead."},
-      altPlaces:[["Bugis+ Singapore","Bugis+"],["Hjh Maimunah Singapore","Hjh Maimunah"]]},
-    {time:"4:00 PM",title:"Buy Chingay Tickets",desc:"Walk 8 min to Raffles City (Level 3) SISTIC counter. Buy physical tickets for the Chingay Parade.",
-      places:[["SISTIC Raffles City Singapore","SISTIC Raffles City (Level 3)"]],icon:"🎫",
-      alts:{rain:"Use the underground MRT tunnels to walk there dry.",tired:"Call the SISTIC hotline (+65 6348 5555) from your hotel bed.",skip:"Grab a beer at the historic CHIJMES courtyard instead."},
-      altPlaces:[["CHIJMES Singapore","CHIJMES"]],
-      tip:"SISTIC Hotline: +65 6348 5555"},
-    {time:"7:30 PM",title:"Chingay Parade",desc:"Head to F1 Pit Building. Theme: WISH. If no tickets, watch the massive floats from the Helix Bridge for free.",
-      places:[["F1 Pit Building Singapore","F1 Pit Building"],["Helix Bridge Singapore","Helix Bridge"]],icon:"🎆",
-      alts:{rain:"Wear ponchos; the parade continues in the rain!",tired:"Watch the Marina Bay light show from a quiet bench instead.",skip:"Get high-end cocktails at Atlas Bar."},
-      altPlaces:[["Marina Bay Promenade Singapore","Marina Bay Promenade"],["Atlas Bar Singapore","Atlas Bar"]]},
-    {time:"Late Night",title:"Mama Diam",desc:"Post-parade drinks at this legendary no-frills bar. Cheap beers, local vibes, open late.",
-      places:[["Mama Diam Singapore","Mama Diam"]],icon:"🍺",
-      alts:{rain:"Take a Grab straight there.",tired:"Head back to the hotel and rest.",skip:"Grab a nightcap at CHIJMES courtyard."},
-      altPlaces:[["CHIJMES Singapore","CHIJMES"]],
-      tip:"No-frills legend · Cheap beers · Open late"}
-  ]
-},
-{
-  id:2,date:"Sat 28 Feb",title:"Birds & Little India Deep Dive",emoji:"🦜",
-  hotel:"Hotel Waterloo",hotelAddr:"78 Waterloo St, Singapore",
-  dayLocations:[["Bird Paradise Mandai Singapore","Bird Paradise"],["Serangoon Road Little India Singapore","Serangoon Road"],["Sri Veeramakaliamman Temple Singapore","Sri Veeramakaliamman Temple"],["House of Tan Teng Niah Singapore","House of Tan Teng Niah"],["Mustafa Centre Singapore","Mustafa Centre"],["Sultan Mosque Singapore","Sultan Mosque"],["Zam Zam Restaurant Singapore","Zam Zam Restaurant"],["Standing Sushi Bar Odeon Towers Singapore","Standing Sushi Bar"]],
-  events:[
-    {time:"9:00 AM",title:"Breakfast & Head to Mandai",desc:"Breakfast at hotel. MRT to Khatib (NS14), then Mandai Shuttle to Bird Paradise.",
-      places:[["Khatib MRT Singapore","Khatib MRT (NS14)"],["Bird Paradise Mandai Singapore","Bird Paradise"]],icon:"🥐",
-      tip:"MRT → Khatib (NS14) → Mandai Shuttle"},
-    {time:"10:00 AM",title:"Bird Paradise",desc:"Predators on Wings show at 10 AM! Huge walk-in aviaries with free-flying birds.",
-      places:[["Bird Paradise Mandai Singapore","Bird Paradise"]],icon:"🦅",bino:"Use your Crivit 12x36 for the Predators on Wings show!",
-      alts:{rain:"Spend the morning inside the massive indoor Penguin Cove.",tired:"Take the internal park tram instead of walking the aviaries.",skip:"Go to Sungei Buloh Wetland Reserve instead."},
-      altPlaces:[["Sungei Buloh Wetland Reserve Singapore","Sungei Buloh"]]},
-    {time:"3:00 PM",title:"Little India Deep Dive",desc:"Immerse in minority culture. Walk Serangoon Road, visit Sri Veeramakaliamman Temple, see the colorful House of Tan Teng Niah, and explore the chaotic Mustafa Centre (24/7!).",
-      places:[["Serangoon Road Little India Singapore","Serangoon Road"],["Sri Veeramakaliamman Temple Singapore","Sri Veeramakaliamman Temple"],["House of Tan Teng Niah Singapore","House of Tan Teng Niah"],["Mustafa Centre Singapore","Mustafa Centre"]],icon:"🪷",
-      alts:{rain:"Spend hours inside the 24/7 Mustafa Centre.",tired:"Sit at a local kopitiam and drink Teh Tarik.",skip:"Head to Kampong Glam early instead."}},
-    {time:"6:30 PM",title:"Kampong Glam & Dinner",desc:"Walk to Kampong Glam. See Sultan Mosque, Haji Lane murals, then eat legendary Murtabak at Zam Zam (S$8).",
-      places:[["Sultan Mosque Singapore","Sultan Mosque"],["Haji Lane Singapore","Haji Lane"],["Zam Zam Restaurant Singapore","Zam Zam Restaurant"]],icon:"🥘",
-      alts:{rain:"Take a Grab directly to the restaurant.",tired:"Order Zam Zam delivery via Grab app to the hotel.",skip:"Stay in Little India and eat at Tekka Centre."},
-      altPlaces:[["Tekka Centre Singapore","Tekka Centre"]],
-      tip:"Murtabak ~S$8 · Zam Zam since 1908"},
-    {time:"8:00 PM",title:"Standing Sushi Bar",desc:"Odeon Towers. Famous S$2 sake and S$5 beers. Get there before 21:00 closing! Perfect Saturday night wind-down.",
-      places:[["Standing Sushi Bar Odeon Towers Singapore","Standing Sushi Bar (Odeon Towers)"]],icon:"🍣",
-      alts:{rain:"It's indoors — perfect rainy night spot.",tired:"Skip it, head back to the hotel.",skip:"Late-night drinks at Mama Diam instead."},
-      altPlaces:[["Mama Diam Singapore","Mama Diam"]],
-      tip:"⚠️ Closes at 21:00! · S$2 sake · S$5 beers"}
-  ]
-},
-{
-  id:3,date:"Sun 1 Mar",title:"Mass, Chinatown & Gardens",emoji:"⛪",
-  hotel:"Hotel Waterloo",hotelAddr:"78 Waterloo St, Singapore",
-  dayLocations:[["Cathedral of the Good Shepherd Singapore","Cathedral"],["Pagoda Street Chinatown Singapore","Pagoda Street"],["Buddha Tooth Relic Temple Singapore","Buddha Tooth Relic Temple"],["Sri Mariamman Temple Singapore","Sri Mariamman Temple"],["Chinatown Food Street Singapore","Chinatown Food Street"],["Funan Mall Singapore","Funan Mall"],["Marina Bay Sands Singapore","Marina Bay Sands"],["Gardens by the Bay Singapore","Gardens by the Bay"],["Supertree Grove Singapore","Supertree Grove"]],
-  events:[
-    {time:"9:00 AM",title:"Breakfast at Hotel",desc:"Leisurely start. Breakfast included.",icon:"🥐"},
-    {time:"10:30 AM",title:"Sunday Mass",desc:"Cathedral of the Good Shepherd. Beautiful colonial-era church, 10-min walk from hotel.",
-      places:[["Cathedral of the Good Shepherd Singapore","Cathedral of the Good Shepherd"]],icon:"⛪",
-      alts:{rain:"It's indoors — go regardless.",tired:"Attend but sit near the back to leave early if needed.",skip:"Grab coffee at a local kopitiam."}},
-    {time:"12:30 PM",title:"Chinatown Deep Dive",desc:"Explore Chinese minority heritage. Walk Pagoda Street, visit the massive Buddha Tooth Relic Temple, see Sri Mariamman Temple (oldest Hindu temple in Singapore, right in Chinatown!). Eat at Chinatown Food Street.",
-      places:[["Pagoda Street Chinatown Singapore","Pagoda Street"],["Buddha Tooth Relic Temple Singapore","Buddha Tooth Relic Temple"],["Sri Mariamman Temple Singapore","Sri Mariamman Temple"],["Chinatown Food Street Singapore","Chinatown Food Street"],["Chinatown Complex Singapore","Chinatown Complex"]],icon:"🏮",
-      alts:{rain:"Eat and shop inside Chinatown Complex — all covered.",tired:"Just do the temples and sit at a traditional tea house.",skip:"Walk the Henderson Waves bridge instead."},
-      altPlaces:[["Henderson Waves Singapore","Henderson Waves"],["Chinatown Complex Singapore","Chinatown Complex"]]},
-    {time:"3:30 PM",title:"Funan Digital Life Mall",desc:"Tech shopping detour! Great spot to browse robots, gadgets, drones, and electronics.",
-      places:[["Funan Mall Singapore","Funan Digital Life Mall"]],icon:"🤖",
-      alts:{rain:"Perfect — it's fully indoors!",tired:"Skip it, head straight to Marina Bay.",skip:"Walk the Southern Ridges / Henderson Waves instead."},
-      altPlaces:[["Southern Ridges Singapore","Southern Ridges"],["Henderson Waves Singapore","Henderson Waves"]]},
-    {time:"6:00 PM",title:"Marina Bay & Gardens by the Bay",desc:"Walk through Marina Bay Sands to Gardens by the Bay. Find a spot under the Supertree Grove for the free Garden Rhapsody light show at 19:45.",
-      places:[["Marina Bay Sands Singapore","Marina Bay Sands"],["Gardens by the Bay Singapore","Gardens by the Bay"],["Supertree Grove Singapore","Supertree Grove"]],icon:"🌟",
-      alts:{rain:"Watch from inside the MBS shopping mall windows.",tired:"Lie flat on the grass under the Supertrees and relax.",skip:"Get a rooftop beer at Mr. Punch Public House instead."},
-      altPlaces:[["Mr Punch Public House Singapore","Mr. Punch Public House"]],
-      tip:"Garden Rhapsody light show: FREE at 19:45 & 20:45 nightly"}
-  ]
-},
-{
-  id:4,date:"Mon 2 Mar",title:"The Bus to History",emoji:"🚌",
-  hotel:"The Majestic Malacca",hotelAddr:"188 Jln Bunga Raya, Melaka",
-  part:"Part 2: Historic Splurge",
-  dayLocations:[["Queen Street Bus Terminal Singapore","Queen Street Terminal"],["Melaka Sentral Bus Terminal","Melaka Sentral"],["The Majestic Malacca 188 Jln Bunga Raya","The Majestic Malacca"],["Dutch Square Melaka","Dutch Square"],["Pak Putra Tandoori Melaka","Pak Putra Tandoori"],["Reggae on the River Melaka","Reggae on the River"]],
-  events:[
-    {time:"8:30 AM",title:"Breakfast & Checkout",desc:"Check out of Hotel Waterloo.",places:[["Hotel Waterloo 78 Waterloo St Singapore","Hotel Waterloo"]],icon:"🧳"},
-    {time:"9:00 AM",title:"Walk to Queen Street Terminal",desc:"Short walk from the hotel to the bus terminal.",places:[["Queen Street Bus Terminal Singapore","Queen Street Terminal"]],icon:"🚶"},
-    {time:"11:00 AM",title:"KKKL Express Bus to Melaka",desc:"Queen Street → Melaka Sentral (4–4.5 hrs). Passport required at the border!",
-      places:[["Queen Street Bus Terminal Singapore","Queen Street Terminal"],["Melaka Sentral Bus Terminal","Melaka Sentral"]],icon:"🚌",alert:"Passport required!",
-      alts:{rain:"Take a Grab taxi to the bus terminal.",tired:"Sleep the entire way on the Super VIP reclining seats.",skip:"Take the later 1:30 PM bus if you want more time in Singapore."},
-      tip:"Also consider 707 Inc bus · Super VIP seats recline fully"},
-    {time:"3:00 PM",title:"Check-in & Dutch Square",desc:"Check into The Majestic Malacca (1920s mansion). Book Historian Tour at reception! Then walk to Dutch Square (Red Square).",
-      places:[["The Majestic Malacca 188 Jln Bunga Raya","The Majestic Malacca"],["Dutch Square Melaka","Dutch Square"]],icon:"🏨",alert:"Book Historian Tour!",
-      alts:{rain:"Visit the Baba Nyonya Heritage Museum.",tired:"Take a Melaka River Cruise boat.",skip:"Have coffee at Geographer Cafe."},
-      altPlaces:[["Baba Nyonya Heritage Museum Melaka","Baba Nyonya Museum"],["Melaka River Cruise","Melaka River Cruise"],["Geographer Cafe Melaka","Geographer Cafe"]]},
-    {time:"7:30 PM",title:"Tandoori & Reggae",desc:"Dinner at Pak Putra Tandoori — legendary roadside tandoori on banana leaf. Then beers at Reggae on the River.",
-      places:[["Pak Putra Tandoori Melaka","Pak Putra Tandoori"],["Reggae on the River Melaka","Reggae on the River"]],icon:"🍗",
-      alts:{rain:"Eat at the hotel's luxury restaurant.",tired:"Order room service at The Majestic.",skip:"Eat street food at the Jonker Street Night Market."},
-      altPlaces:[["Jonker Street Night Market Melaka","Jonker Street Night Market"]]}
-  ]
-},
-{
-  id:5,date:"Tue 3 Mar",title:"Deep Melaka",emoji:"📜",
-  hotel:"The Majestic Malacca",hotelAddr:"188 Jln Bunga Raya, Melaka",
-  dayLocations:[["The Majestic Malacca 188 Jln Bunga Raya","The Majestic Malacca"],["Poh Piah Lwee Melaka","Poh Piah Lwee"],["Hoe Kee Chicken Rice Ball Melaka","Hoe Kee"],["St Pauls Hill Melaka","St. Paul's Hill"],["Masjid Selat Melaka","Floating Mosque"],["Jonker Street Melaka","Jonker Street"]],
-  events:[
-    {time:"9:00 AM",title:"Breakfast at The Majestic",desc:"Included with your stay.",icon:"🥐"},
-    {time:"10:30 AM",title:"Majestic Historian Tour",desc:"Pre-booked guided heritage walk through Melaka's history.",
-      places:[["The Majestic Malacca 188 Jln Bunga Raya","The Majestic Malacca"]],icon:"🎓",
-      alts:{rain:"Visit the indoor Baba Nyonya Heritage Museum instead.",tired:"Read a book in the hotel's stunning library.",skip:"Take a Melaka River Cruise boat."},
-      altPlaces:[["Baba Nyonya Heritage Museum Melaka","Baba Nyonya Museum"],["Melaka River Cruise","Melaka River Cruise"]]},
-    {time:"1:00 PM",title:"Lunch & St. Paul's Hill",desc:"Eat at Poh Piah Lwee (pork lard spring rolls) or Hoe Kee Chicken Rice Balls. Then climb St. Paul's Hill for the view.",
-      places:[["Poh Piah Lwee Melaka","Poh Piah Lwee"],["Hoe Kee Chicken Rice Ball Melaka","Hoe Kee Chicken Rice Balls"],["St Pauls Hill Melaka","St. Paul's Hill"]],icon:"🥟"},
-    {time:"3:00 PM",title:"Majestic Journey Spa",desc:"In-hotel spa treatment. Pure relaxation and luxury.",
-      places:[["The Majestic Malacca Spa","Majestic Spa"]],icon:"💆",
-      alts:{rain:"Enjoy the luxury hotel spa and pool all afternoon!",tired:"Enjoy the luxury hotel spa and pool all afternoon!",skip:"Enjoy the luxury hotel spa and pool all afternoon!"}},
-    {time:"Sunset",title:"Masjid Selat (Floating Mosque)",desc:"Grab taxi (RM10) to the Floating Mosque. Absolutely stunning at sunset over the water.",
-      places:[["Masjid Selat Melaka","Masjid Selat (Floating Mosque)"]],icon:"🌅",
-      alts:{rain:"Skip sunset; go eat traditional Nyonya Kuih desserts.",tired:"Watch the river boats from the hotel pool.",skip:"Have early evening beers at Geographer Cafe."},
-      altPlaces:[["Geographer Cafe Melaka","Geographer Cafe"]],
-      tip:"Grab fare: ~RM10 each way"},
-    {time:"Night",title:"Jonker Street Evening",desc:"Explore cafés, street food, souvenirs. End at Geographer Cafe or Reggae on the River.",
-      places:[["Jonker Street Melaka","Jonker Street"],["Geographer Cafe Melaka","Geographer Cafe"],["Reggae on the River Melaka","Reggae on the River"]],icon:"🏮"}
-  ]
-},
-{
-  id:6,date:"Wed 4 Mar",title:"Return & Sentosa",emoji:"🏖️",
-  hotel:"M Social Hotel",hotelAddr:"90 Robertson Quay, Clarke Quay, Singapore",
-  part:"Part 3: The River & Nightlife Base",
-  dayLocations:[["Batu Berendam Herons Melaka","Batu Berendam"],["M Social Hotel Robertson Quay Singapore","M Social Hotel"],["Sentosa Island Singapore","Sentosa Island"],["Palawan Beach Sentosa Singapore","Palawan Beach"],["SEA Aquarium Sentosa Singapore","S.E.A. Aquarium"],["Robertson Quay Singapore","Robertson Quay"]],
-  events:[
-    {time:"7:00 AM",title:"Dawn Birding at Batu Berendam",desc:"Early Grab to the heron colony. Fantastic birding at dawn.",
-      places:[["Batu Berendam Herons Melaka","Batu Berendam Herons"]],icon:"🐦",optional:true,
-      bino:"Use your Crivit 12x36 to spot Asian Openbill storks!",
-      alts:{rain:"Sleep in and enjoy the luxury hotel bed!",tired:"Sleep in and enjoy the luxury hotel bed!",skip:"Sleep in and enjoy the luxury hotel bed!"}},
-    {time:"9:00 AM",title:"Breakfast & Checkout",desc:"Last breakfast at The Majestic. Check out.",icon:"🧳"},
-    {time:"11:00 AM",title:"Bus back to Singapore",desc:"Melaka Sentral → Singapore. Same route in reverse.",places:[["Melaka Sentral Bus Terminal","Melaka Sentral"]],icon:"🚌"},
-    {time:"3:30 PM",title:"Check-in: M Social Hotel",desc:"Robertson Quay riverside location. Drop bags, freshen up.",
-      places:[["M Social Hotel Robertson Quay Singapore","M Social Hotel"]],icon:"🏨",
-      alts:{rain:"Relax in the vibrant M Social lobby/bar.",tired:"Nap in the room.",skip:"Take an afternoon stroll along the Singapore River."}},
-    {time:"5:00 PM",title:"Sentosa Island",desc:"Take the Sentosa Express monorail or walk across the boardwalk. Enjoy Palawan Beach, walk around, or visit the S.E.A. Aquarium.",
-      places:[["Sentosa Island Singapore","Sentosa Island"],["Palawan Beach Sentosa Singapore","Palawan Beach"],["SEA Aquarium Sentosa Singapore","S.E.A. Aquarium"]],icon:"🏖️",
-      alts:{rain:"Head to the indoor S.E.A. Aquarium.",tired:"Just walk the beach boardwalk and chill.",skip:"Explore Robertson Quay and Clarke Quay instead."},
-      altPlaces:[["Clarke Quay Singapore","Clarke Quay"]],
-      tip:"Sentosa Express from VivoCity · Free entry to island after 4 PM (check)"},
-    {time:"8:30 PM",title:"Dinner at Robertson Quay",desc:"Walk back to the hotel neighborhood. Plenty of riverside restaurants and bars walking distance from M Social.",
-      places:[["Robertson Quay Singapore restaurants","Robertson Quay"],["Clarke Quay Singapore","Clarke Quay"]],icon:"🍽️",
-      alts:{rain:"Eat at the M Social hotel restaurant.",tired:"Order delivery to the room.",skip:"Explore Tiong Bahru for a local dinner."},
-      altPlaces:[["Tiong Bahru Singapore","Tiong Bahru"]]}
-  ]
-},
-{
-  id:7,date:"Thu 5 Mar",title:"MacRitchie, Island & East Coast",emoji:"🌿",
-  hotel:"M Social Hotel",hotelAddr:"90 Robertson Quay, Clarke Quay, Singapore",
-  dayLocations:[["MacRitchie TreeTop Walk Singapore","MacRitchie TreeTop Walk"],["Changi Point Ferry Terminal Singapore","Changi Point Ferry"],["Pulau Ubin Singapore","Pulau Ubin"],["Chek Jawa Wetlands Pulau Ubin","Chek Jawa"],["Joo Chiat Singapore","Joo Chiat"],["Koon Seng Road Singapore","Koon Seng Road"],["328 Katong Laksa Singapore","328 Katong Laksa"],["Coq and Balls Kim Tian Road Singapore","Coq & Balls"]],
-  events:[
-    {time:"7:30 AM",title:"Breakfast & MacRitchie TreeTop Walk",desc:"Early breakfast at hotel. Head to MacRitchie Reservoir for the 250m suspension bridge through the jungle canopy. Go early to beat the heat!",
-      places:[["MacRitchie TreeTop Walk Singapore","MacRitchie TreeTop Walk"]],icon:"🌿",
-      bino:"Scan the canopy for long-tailed macaques and drongos!",
-      alts:{rain:"Cancel hike; take a bumboat to Pulau Ubin later or visit Asian Civilisations Museum.",tired:"Walk the flat reservoir boardwalks only; skip the steep bridge hike.",skip:"Sleep in and head straight to Pulau Ubin."},
-      altPlaces:[["National Orchid Garden Singapore Botanic Gardens","National Orchid Garden"],["Asian Civilisations Museum Singapore","Asian Civilisations Museum"]]},
-    {time:"12:00 PM",title:"Pulau Ubin Island",desc:"MRT to Changi Point Ferry Terminal. Take the S$4 bumboat to Pulau Ubin. Rent a bike and ride to the Chek Jawa Wetlands.",
-      places:[["Changi Point Ferry Terminal Singapore","Changi Point Ferry Terminal"],["Pulau Ubin Singapore","Pulau Ubin"],["Chek Jawa Wetlands Pulau Ubin","Chek Jawa Wetlands"]],icon:"🏝️",
-      bino:"Essential here for spotting wild hornbills and otters!",
-      alts:{rain:"Cancel island; visit the Asian Civilisations Museum.",tired:"Skip the island; explore Tiong Bahru Market for lunch.",skip:"Go to Sungei Buloh Wetland Reserve instead."},
-      altPlaces:[["Asian Civilisations Museum Singapore","Asian Civilisations Museum"],["Tiong Bahru Market Singapore","Tiong Bahru Market"],["Sungei Buloh Wetland Reserve Singapore","Sungei Buloh"]],
-      tip:"Bumboat: S$4 · Bike rental on island · Last boat back ~5 PM"},
-    {time:"4:00 PM",title:"Katong / Joo Chiat",desc:"Head east. Walk Joo Chiat Road and see the famous Peranakan pastel shophouses on Koon Seng Road.",
-      places:[["Koon Seng Road Singapore","Koon Seng Road"],["Joo Chiat Singapore","Joo Chiat"]],icon:"🏘️",
-      alts:{rain:"Hop between cafes on East Coast Road.",tired:"Grab a coffee at a heritage bakery.",skip:"Explore Tiong Bahru Market closer to the city."},
-      altPlaces:[["East Coast Road Singapore","East Coast Road"],["Tiong Bahru Market Singapore","Tiong Bahru Market"]]},
-    {time:"7:00 PM",title:"Farewell Dinner: 328 Katong Laksa",desc:"The iconic spicy coconut noodle soup. A Singapore must-eat.",
-      places:[["328 Katong Laksa Singapore","328 Katong Laksa"]],icon:"🍜",
-      alts:{rain:"Take a Grab directly between locations.",tired:"Head back to Robertson Quay early.",skip:"Have farewell Satay at Lau Pa Sat instead."},
-      altPlaces:[["Lau Pa Sat Singapore","Lau Pa Sat"]]},
-    {time:"9:00 PM",title:"Farewell Drinks: Coq & Balls",desc:"A local Tiong Bahru legend tucked under public housing. No tourists, just great vibes and fair prices.",
-      places:[["Coq and Balls Kim Tian Road Singapore","Coq & Balls (Kim Tian Rd)"]],icon:"🍺",
-      alts:{rain:"Drinks at Clarke Quay (walking distance from M Social).",tired:"Drink at the M Social hotel bar.",skip:"Walk along Robertson Quay riverside."},
-      altPlaces:[["Clarke Quay Singapore","Clarke Quay"]],
-      tip:"Kim Tian Rd, Tiong Bahru · Hidden gem under HDB flats"}
-  ]
-},
-{
-  id:8,date:"Fri 6 Mar",title:"Departure",emoji:"🛫",
-  hotel:"M Social Hotel",hotelAddr:"90 Robertson Quay, Clarke Quay, Singapore",
-  dayLocations:[["Changi Airport Singapore","Changi Airport"],["Jewel Changi Airport","Jewel Changi"]],
-  events:[
-    {time:"8:30 AM",title:"Final Breakfast & Checkout",desc:"Last breakfast at M Social Hotel. Check out.",icon:"🧳"},
-    {time:"10:00 AM",title:"Head to Changi Airport",desc:"Grab taxi (~S$25-30). Leave early — flight at 11:40 AM!",
-      places:[["Changi Airport Singapore","Changi Airport"]],icon:"✈️",alert:"Flight at 11:40 AM!",
-      alts:{rain:"Book the Grab 15 min earlier to account for traffic.",tired:"Sleep on the ride.",skip:"Don't skip this — you need to catch your flight!"},
-      tip:"Grab fare: ~S$25–30"},
-    {time:"10:45 AM",title:"Jewel Changi (If Time Allows)",desc:"Rain Vortex — world's tallest indoor waterfall. Only if you have time!",
-      places:[["Jewel Changi Airport","Jewel Changi"]],icon:"💎",optional:true},
-    {time:"11:40 AM",title:"Flight Departs",desc:"Safe travels home! ✈️",icon:"🛫"}
-  ]
-}
+const SG=[
+  {id:"jewel",emoji:"💎",title:"Jewel Changi (Rain Vortex)",sub:"Indoor waterfall",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"100 (if braced) / Auto",af:"Auto Area",release:"Timer 2s",picCtrl:"Standard",
+    tip:"Rest camera on a railing. Use a slower shutter (1/10s) to make the waterfall look smooth and silky.",
+    why:"A slower shutter speed blurs moving water, creating a silky effect. The 2-second timer prevents your finger from shaking the camera when you press the button.",
+    shutter:"1/10s (silky) or 1/500s (freeze)"},
+  {id:"albert",emoji:"🍜",title:"Albert Centre Hawker",sub:"Cheap local food, steam, chaos",
+    lens:"16-50mm",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 6400)",af:"Auto Area",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Get close to the food — fill the frame. Use the flip screen to shoot from table-level.",
+    why:"Vivid picture control makes curry, chili, and noodle colors pop. The flip screen lets you compose at table height without awkwardly bending down.",
+    shutter:"Auto"},
+  {id:"albert-wide",emoji:"🏮",title:"Hawker Market Wide Shot",sub:"Atmosphere, stalls, neon signs",
+    lens:"16-50mm (at 16mm)",mode:"A",aperture:"f/8",iso:"Auto (up to 3200)",af:"Auto Area",release:"S (Single)",picCtrl:"Standard",
+    tip:"Shoot from the entrance looking down the corridor. Include steam, cooks, neon signs for depth.",
+    why:"f/8 is the sweet spot — keeps the entire scene sharp front to back. 16mm wide angle captures the full chaotic atmosphere.",
+    shutter:"Auto"},
+  {id:"parade",emoji:"🎆",title:"Chingay Parade (Floats)",sub:"Moving floats, bright lights",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"Auto (up to 12800)",af:"Continuous AF (AF-C)",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"1/250s freezes moving floats. Use burst mode (CH) and hold the shutter. Track floats with continuous AF.",
+    why:"Shutter Priority at 1/250 ensures the moving floats are frozen sharp. Continuous AF (AF-C) tracks moving subjects. Burst mode gives you multiple frames to pick the best one.",
+    shutter:"1/250s"},
+  {id:"parade-helix",emoji:"🌉",title:"Helix Bridge Night View",sub:"Marina Bay from the bridge",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"100 (manual)",af:"Auto Area",release:"Timer 2s",picCtrl:"Standard",
+    tip:"Put camera on the bridge railing. 2-4 second exposure. Magic. Water becomes silky glass.",
+    why:"A long exposure at ISO 100 gives you a perfectly clean, grain-free image with silky water reflections. The 2-second timer prevents shake from pressing the shutter.",
+    shutter:"2–4 sec"},
+  {id:"mama-diam",emoji:"🍺",title:"Mama Diam Bar",sub:"Dim lighting, local vibes",
+    lens:"16-50mm",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 12800)",af:"Auto Area",release:"S (Single)",picCtrl:"Standard",
+    tip:"Open aperture as wide as possible. Embrace the grain — it adds to the gritty bar atmosphere.",
+    why:"In very dim bars, the camera needs maximum light. f/3.5 lets in the most light. High ISO grain is actually charming in bar photos — it looks like film.",
+    shutter:"Auto"},
+  {id:"standing-sushi",emoji:"🍣",title:"Standing Sushi Bar",sub:"Sake, sushi, intimate space",
+    lens:"16-50mm (at 35-50mm)",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 6400)",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Standard",
+    tip:"Zoom to 50mm for tight sushi close-ups. Touch-focus on the fish texture. Include the sake glass for context.",
+    why:"50mm at f/3.5 gives you a shallow depth of field that isolates the sushi against a blurred background. Single AF ensures the focus hits exactly where you touch.",
+    shutter:"Auto"},
+  {id:"bird-paradise",emoji:"🦅",title:"Predators on Wings Show",sub:"Raptors in flight",
+    lens:"50-250mm (at 250mm)",mode:"S",aperture:"Auto",iso:"Auto (up to 3200)",af:"Auto Area (Subject Tracking)",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"Zoom to 250mm for raptors in flight. Hold the shutter down for burst mode! Pre-focus on the stage area.",
+    why:"Continuous High (CH) takes ~11 photos per second, massively increasing your chances of capturing a sharp shot of a fast-moving bird mid-flight.",
+    shutter:"1/1000s"},
+  {id:"bird-perch",emoji:"🦜",title:"Colorful Birds (Perched)",sub:"Parrots, toucans, close-up",
+    lens:"50-250mm",mode:"A",aperture:"f/6.3 (widest at tele)",iso:"Auto (up to 3200)",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Focus on the eye — always the eye. Vivid makes feathers pop. Get low for eye-level perspective.",
+    why:"A wide aperture at telephoto blurs the mesh/cage behind the bird. Vivid picture control saturates the brilliant feather colors. The eye is the anchor of any animal portrait.",
+    shutter:"Auto"},
+  {id:"penguin",emoji:"🐧",title:"Penguin Cove (Indoor/Glass)",sub:"Through glass in dim light",
+    lens:"16-50mm or 50-250mm",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 12800)",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Standard",
+    tip:"Press lens hood FLAT against the glass to kill reflections. Cup your hand around the lens if needed.",
+    why:"Glass creates terrible reflections. Pressing the lens hood against the glass blocks ambient light from bouncing off the surface, giving you a clear view through.",
+    shutter:"Auto"},
+  {id:"little-india",emoji:"🪷",title:"Little India Deep Dive",sub:"Markets, temples, people",
+    lens:"16-50mm",mode:"A",aperture:"f/3.5–f/5.6",iso:"Auto (up to 3200)",af:"Auto Area (Face/Eye)",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Capture the chaos. Shoot wide for the wet market, zoom to 50mm for vendor portraits. Use face detection.",
+    why:"The Zfc has excellent face detection. In the dark wet market, Auto ISO up to 3200 keeps shutter speeds fast enough to freeze people moving. Vivid for the flower garlands and spices.",
+    shutter:"Auto"},
+  {id:"tan-teng-niah",emoji:"🏠",title:"House of Tan Teng Niah",sub:"Colorful heritage house",
+    lens:"16-50mm (at 16mm)",mode:"A",aperture:"f/5.6–f/8",iso:"Auto",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Vivid saturates the bright paints beautifully. Step across the street for the full facade. Include a passerby for scale.",
+    why:"Vivid picture control makes the rainbow colors really sing. f/8 keeps the entire building sharp. Slight overexposure (+0.3) keeps pastels light and airy.",
+    shutter:"Auto",expComp:"+0.3"},
+  {id:"mustafa",emoji:"🛍️",title:"Mustafa Centre",sub:"24/7 indoor chaos",
+    lens:"16-50mm",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 6400)",af:"Auto Area",release:"S (Single)",picCtrl:"Standard",
+    tip:"Shoot from the hip using the flip screen. Capture the overwhelming stacks of goods for texture.",
+    why:"Indoor fluorescent lighting is dim and uneven. Wide aperture lets in maximum light. Hip-shooting with the flip screen is discreet and captures authentic candid moments.",
+    shutter:"Auto"},
+  {id:"sultan-mosque",emoji:"🕌",title:"Sultan Mosque at Dusk",sub:"Golden dome, blue hour sky",
+    lens:"16-50mm",mode:"A",aperture:"f/8",iso:"Auto (up to 3200)",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Standard",
+    tip:"Blue hour (just after sunset) — magical sky behind the golden dome. Use Muscat Street for the classic straight-on shot.",
+    why:"f/8 keeps the full mosque sharp. The contrast between the warm golden dome and cool blue sky creates a stunning image without any editing.",
+    shutter:"Auto",expComp:"0"},
+  {id:"haji-lane",emoji:"🎨",title:"Haji Lane Street Art",sub:"Murals, narrow lanes",
+    lens:"16-50mm",mode:"A",aperture:"f/5.6",iso:"Auto",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Vivid for maximum mural color. Include the narrow lane and shopfronts for context. Afternoon light bounces nicely.",
+    why:"f/5.6 gives you a good balance — the mural stays sharp but the distant street softens slightly, drawing the eye to the art.",
+    shutter:"Auto"},
+  {id:"cathedral",emoji:"⛪",title:"Cathedral Interior (Mass)",sub:"Dim church, stained glass",
+    lens:"16-50mm (at 16mm)",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 12800)",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Standard",
+    tip:"Enable SILENT SHUTTER (menu → silent photography ON) during the service! Shoot down the central aisle for symmetry.",
+    why:"Church interiors are very dark. You need every bit of light — widest aperture and high ISO. Overexpose +0.7 so you can actually see the ceiling and stained glass.",
+    shutter:"Auto",expComp:"+0.7"},
+  {id:"chinatown",emoji:"🏮",title:"Pagoda Street (Chinatown)",sub:"Red lanterns, shophouses",
+    lens:"16-50mm (at 16mm)",mode:"A",aperture:"f/5.6",iso:"Auto",af:"Auto Area",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Include hanging red lanterns overhead for depth. Crouch low for dramatic perspective up the street.",
+    why:"Vivid makes the reds and golds sing. 16mm captures both the lanterns above and the street below, creating layered depth.",
+    shutter:"Auto"},
+  {id:"buddha-tooth",emoji:"🪥",title:"Buddha Tooth Relic Temple",sub:"Ornate golden interior",
+    lens:"16-50mm",mode:"A",aperture:"f/3.5–f/5.6",iso:"Auto (up to 6400)",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Standard",
+    tip:"Silent shutter for ceremonies. Look UP — the ceiling details are stunning. Capture the golden Buddha from the entrance doorway.",
+    why:"The interior is dim but incredibly ornate. Overexpose +0.7 to reveal the golden details. The entrance doorway creates a natural frame for the Buddha statue.",
+    shutter:"Auto",expComp:"+0.7"},
+  {id:"sri-mariamman",emoji:"🛕",title:"Sri Mariamman Temple",sub:"Oldest Hindu temple, gopuram",
+    lens:"16-50mm",mode:"A",aperture:"f/8",iso:"Auto",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Vivid",
+    tip:"f/8 to capture all the intricate gopuram sculptures sharp. Shoot from across South Bridge Road for the full tower.",
+    why:"The gopuram (entrance tower) is covered in hundreds of tiny painted deities. f/8 ensures every one of them is sharp. Vivid makes the colors electric.",
+    shutter:"Auto"},
+  {id:"chinatown-food",emoji:"🍢",title:"Chinatown Food Street",sub:"Open-air hawker, smoke",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"Auto",af:"Auto Area",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Set 1/50s to capture billowing smoke from woks with slight motion blur. Get close to sizzling dishes.",
+    why:"A slightly slower shutter speed (1/50s) lets the smoke and steam blur naturally, conveying heat and energy. Vivid makes the chili oil and roasted meats look incredible.",
+    shutter:"1/50s"},
+  {id:"funan",emoji:"🤖",title:"Funan Digital Life Mall",sub:"Tech, gadgets, robots",
+    lens:"16-50mm",mode:"A",aperture:"f/3.5–f/5.6",iso:"Auto (up to 3200)",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Standard",
+    tip:"Get close to individual products for detail shots. Touch-focus on the product screen or label.",
+    why:"Standard picture control gives you accurate colors on LED screens and product displays. Single AF lets you choose exactly which gadget is in focus.",
+    shutter:"Auto"},
+  {id:"mbs",emoji:"🏙️",title:"Marina Bay Sands Skyline",sub:"Night cityscape, reflections",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"100 (manual)",af:"Auto Area",release:"Timer 2s",picCtrl:"Standard",
+    tip:"Put camera on ANY flat surface. 2–4 sec exposure. Water becomes glass. Magic.",
+    why:"A long exposure at ISO 100 gives a perfectly clean image. The water turns silky-smooth reflecting the city lights. The 2-sec timer eliminates shake from pressing the shutter.",
+    shutter:"2–4 sec",expComp:"-0.3"},
+  {id:"supertree",emoji:"🌳",title:"Supertree Light Show",sub:"Garden Rhapsody, LED trees",
+    lens:"16-50mm (at 16mm)",mode:"S",aperture:"Auto",iso:"Auto (up to 3200)",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Vivid",
+    tip:"LIE ON THE GROUND looking straight up for the iconic shot! 1/30s captures the flowing light patterns.",
+    why:"A slightly slow shutter (1/30s) lets the flowing LED patterns blur slightly, creating a dreamy effect. Brace elbows on the ground for stability. Vivid makes the colors electric.",
+    shutter:"1/30–1/60s"},
+  {id:"sentosa-beach",emoji:"🏖️",title:"Sentosa Beach",sub:"Tropical sand, bright sun",
+    lens:"16-50mm",mode:"A",aperture:"f/8–f/11",iso:"100–400",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Vivid",
+    tip:"OVEREXPOSE +0.7 for bright, airy beach photos. Sand and water fool the meter — it underexposes.",
+    why:"Bright sand reflects a lot of light, confusing the camera's meter into underexposing. Compensating up +0.7 gives you the bright, vacation-feel look you want.",
+    shutter:"Auto",expComp:"+0.7"},
+  {id:"sea-aquarium",emoji:"🐠",title:"S.E.A. Aquarium",sub:"Fish through glass, dark interior",
+    lens:"16-50mm or 50-250mm",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 12800)",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Standard",
+    tip:"Press lens hood against the glass! NO FLASH. The giant panel: shoot people silhouetted against the blue.",
+    why:"Aquariums are very dark. Glass reflections are your enemy — pressing the lens hood flat against the glass blocks them completely. Flash bounces off glass and scares fish.",
+    shutter:"Auto"},
+  {id:"robertson",emoji:"🌅",title:"Robertson Quay Sunset",sub:"River, bumboats, golden hour",
+    lens:"16-50mm",mode:"A",aperture:"f/5.6–f/8",iso:"Auto",af:"Auto Area",release:"S (Single)",picCtrl:"Standard",
+    tip:"Slight underexposure (-0.3) for richer sunset colors. Include the river and bumboats for foreground.",
+    why:"Underexposure saturates warm sunset tones naturally without any editing. The river provides leading lines drawing the eye into the frame.",
+    shutter:"Auto",expComp:"-0.3"},
+  {id:"macritchie",emoji:"🌿",title:"MacRitchie TreeTop Walk",sub:"Canopy bridge, jungle",
+    lens:"16-50mm (bridge) / 50-250mm (monkeys)",mode:"A",aperture:"f/5.6–f/8",iso:"Auto",af:"Auto Area",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"Swap to 50-250mm BEFORE you enter the trail. Jungle humidity + lens change = dust and condensation on the sensor!",
+    why:"Swapping lenses in the humid jungle invites moisture and dust onto your sensor. Pick a lens and commit for sections of the walk. Burst mode catches erratic monkey movements.",
+    shutter:"Auto",expComp:"+0.3"},
+  {id:"macaque",emoji:"🐒",title:"Macaques / Wildlife in Trees",sub:"Fast-moving animals in canopy",
+    lens:"50-250mm (at max zoom)",mode:"S",aperture:"Auto",iso:"Auto (up to 6400)",af:"Continuous AF (AF-C)",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"1/500s minimum to freeze a macaque mid-jump. Burst mode and patience — wait for the action.",
+    why:"Monkeys are fast and unpredictable. Shutter Priority ensures you never get motion blur. Overexpose +0.3 because dark fur against bright sky confuses the meter.",
+    shutter:"1/500–1/1000s",expComp:"+0.3"},
+  {id:"pulau-ubin",emoji:"🏝️",title:"Pulau Ubin Island",sub:"Rustic village, bikes, nature",
+    lens:"16-50mm",mode:"A",aperture:"f/5.6–f/8",iso:"Auto",af:"Auto Area",release:"S (Single)",picCtrl:"Standard",
+    tip:"Stop cycling completely to shoot. Keep camera strap tight across your body while riding!",
+    why:"f/8 is perfect for bright outdoor landscapes. Everything from the foreground to the horizon stays in focus. Standard picture control gives authentic, natural island colors.",
+    shutter:"Auto"},
+  {id:"chek-jawa",emoji:"🦀",title:"Chek Jawa Wetlands",sub:"Boardwalk, mangroves, wildlife",
+    lens:"50-250mm",mode:"S",aperture:"Auto",iso:"Auto (up to 6400)",af:"Auto Area (Subject Tracking)",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"Use Crivit binoculars to spot hornbills first, then aim the camera. Single-point AF to focus through branches.",
+    why:"If you use Auto Area AF in the mangroves, the camera focuses on the closest branch instead of the bird. Single Point AF gives you precise control to focus past the foliage.",
+    shutter:"1/500s"},
+  {id:"joo-chiat",emoji:"🏘️",title:"Koon Seng Road Shophouses",sub:"Pastel Peranakan facades",
+    lens:"16-50mm (at 16mm)",mode:"A",aperture:"f/8",iso:"Auto",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Vivid",
+    tip:"THE iconic Singapore shot. Stand centered across the road for symmetry. Include the road for leading lines.",
+    why:"f/8 keeps the entire row of shophouses razor sharp. Vivid makes the pastels pop without oversaturating. Perfect symmetry is the key to this shot.",
+    shutter:"Auto",expComp:"+0.3"},
+  {id:"katong-laksa",emoji:"🍜",title:"328 Katong Laksa",sub:"Spicy coconut noodle soup",
+    lens:"16-50mm (at 35-50mm)",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 3200)",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Shoot from above looking down into the bowl. Capture the moment the spoon lifts the noodles — action!",
+    why:"Wide aperture blurs the table clutter. Vivid makes the orange broth and green herbs irresistible. 50mm gives a natural food-magazine perspective.",
+    shutter:"Auto",expComp:"+0.3"},
+  {id:"lau-pa-sat",emoji:"🔥",title:"Lau Pa Sat Satay Street",sub:"Smoke, grills, night food",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"Auto",af:"Auto Area",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Set 1/50s to capture billowing satay smoke with motion blur. The smoke IS the photo.",
+    why:"A slightly slower shutter speed (1/50s) emphasizes the movement of smoke billowing off the grills, giving the photo incredible atmosphere and energy.",
+    shutter:"1/50s"},
+  {id:"coq-balls",emoji:"🍺",title:"Coq & Balls Hidden Bar",sub:"Under HDB flats, gritty vibes",
+    lens:"16-50mm (at 16mm)",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 12800)",af:"Auto Area",release:"S (Single)",picCtrl:"Standard",
+    tip:"Include the HDB block above for context. Shoot the backlit bar counter for atmosphere. Embrace the grain.",
+    why:"The contrast between the massive public housing block and the hidden bar below tells a uniquely Singaporean story. Standard mode preserves the moody, authentic tones.",
+    shutter:"Auto"},
+  {id:"chijmes",emoji:"🏛️",title:"CHIJMES at Night",sub:"Gothic architecture, fairy lights",
+    lens:"16-50mm",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 6400)",af:"Auto Area",release:"S (Single)",picCtrl:"Standard",
+    tip:"The white Gothic arches reflect ambient light beautifully. Use exposure comp -0.3 to keep the night mood dark.",
+    why:"Without negative exposure compensation, the camera tries to brighten the night scene to look like daytime, killing the atmosphere. -0.3 keeps it moody.",
+    shutter:"Auto",expComp:"-0.3"},
+  {id:"atlas",emoji:"🍸",title:"Atlas Bar Interior",sub:"Art deco, gin tower",
+    lens:"16-50mm (at 16mm)",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 6400)",af:"Auto Area",release:"S (Single)",picCtrl:"Standard",
+    tip:"Shoot straight up at the massive gin tower for vertigo effect. Include the art deco ceiling details.",
+    why:"16mm captures the full height of the stunning interior. The wide aperture handles the dim, moody lighting while keeping the golden art deco details visible.",
+    shutter:"Auto",expComp:"+0.3"},
+  {id:"tekka-wet-market",emoji:"🐟",title:"Tekka Wet Market",sub:"Fish, butchers, wet floors, chaos",
+    lens:"16-50mm",mode:"A",aperture:"f/3.5–f/5.6",iso:"Auto (up to 6400)",af:"Auto Area",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Shoot the fishmongers mid-action — chopping, tossing, spraying water. The wet floor reflections are gold. Be respectful, smile first.",
+    why:"The wet market is dark and fast. Wide aperture lets in light while face detection locks onto the animated vendors. Vivid makes the fish scales and chili piles glow.",
+    shutter:"Auto"},
+  {id:"mrt-rush",emoji:"🚇",title:"MRT Rush Hour",sub:"Commuter blur, platform energy",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"Auto",af:"Auto Area",release:"S (Single)",picCtrl:"Standard",
+    tip:"Set 1/15s. Stand still on the platform and let commuters blur past you. Or set 1/500s to freeze a single face in the crowd.",
+    why:"A very slow shutter (1/15s) turns rushing commuters into ghostly streaks while the station stays sharp. It captures the feeling of the city's relentless pace.",
+    shutter:"1/15s (blur) or 1/500s (freeze)"},
+  {id:"construction-dust",emoji:"🏗️",title:"Construction & Dust Clouds",sub:"Building sites, renovation, debris",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"Auto",af:"Auto Area",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"Shoot into the light so dust particles glow. 1/250s freezes falling debris mid-air. Protect your lens with a UV filter!",
+    why:"Backlit dust becomes visible golden particles suspended in air. Burst mode catches the peak moment of debris falling or workers in action. UV filter protects from grit.",
+    shutter:"1/250s"},
+  {id:"incense-temple",emoji:"🪔",title:"Temple Incense Smoke",sub:"Spiraling smoke coils, prayers",
+    lens:"16-50mm (at 50mm)",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 3200)",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Standard",
+    tip:"Backlight the smoke — shoot toward a window or lamp. The spiraling incense coils overhead are incredible at 16mm looking up.",
+    why:"Smoke is invisible unless backlit. Positioning yourself so the light source is behind the smoke makes every wisp glow. Wide aperture isolates individual coils against dark backgrounds.",
+    shutter:"Auto",expComp:"+0.3"},
+  {id:"moving-crowd",emoji:"👥",title:"Busy Crossing / Crowd Flow",sub:"Orchard Rd, CBD, Raffles Place",
+    lens:"16-50mm (at 16mm)",mode:"S",aperture:"Auto",iso:"Auto",af:"Auto Area",release:"S (Single)",picCtrl:"Standard",
+    tip:"Find a high vantage point (pedestrian bridge). Set 1/8s for extreme motion blur of the crowd below. Use the railing as a brace.",
+    why:"From above, moving people at 1/8s become colorful abstract streaks — it turns an ordinary crosswalk into art. The elevated angle also eliminates cluttered backgrounds.",
+    shutter:"1/8s (extreme blur) or 1/250s (freeze)"},
+  {id:"hawker-steam",emoji:"♨️",title:"Wok Hei & Kitchen Steam",sub:"Stir-fry flames, char kway teow",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"Auto (up to 6400)",af:"Auto Area",release:"CH (Burst)",picCtrl:"Vivid",
+    tip:"1/500s freezes the flame toss. Stand beside the cook (ask first). Burst mode catches the peak moment of wok fire.",
+    why:"Wok hei (breath of the wok) creates spectacular fire columns. Burst mode at 1/500s gives you 11 frames per second — one will perfectly capture the fire at its peak.",
+    shutter:"1/500s"},
+  {id:"umbrella-rain",emoji:"☔",title:"People Under Umbrellas",sub:"Monsoon season street scenes",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"Auto (up to 3200)",af:"Auto Area (Face/Eye)",release:"S (Single)",picCtrl:"Standard",
+    tip:"Colorful umbrellas from above (overhead bridge) create incredible patterns. At street level, shoot reflections of umbrella colors in puddles.",
+    why:"Rain transforms Singapore's streets. Umbrellas add pops of color, puddles create reflections, and the diffused light is incredibly flattering for portraits under shelter.",
+    shutter:"1/250s"},
+  {id:"cyclist-east-coast",emoji:"🚴",title:"Cyclists at East Coast Park",sub:"Morning exercise, golden light",
+    lens:"50-250mm (at 100-150mm)",mode:"S",aperture:"Auto",iso:"Auto",af:"Continuous AF (AF-C)",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"Pan with the cyclist at 1/60s for motion-blur background. Or freeze at 1/1000s. Early morning = golden backlight through the trees.",
+    why:"Panning with a moving cyclist blurs the background trees into streaks while keeping the rider sharp. It conveys speed and energy. Golden morning backlight adds rim lighting to the cyclist.",
+    shutter:"1/60s (pan) or 1/1000s (freeze)"},
+  {id:"elderly-kopitiam",emoji:"👴",title:"Elderly at Kopitiam",sub:"Character portraits, daily ritual",
+    lens:"16-50mm (at 50mm)",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 6400)",af:"Auto Area (Face/Eye)",release:"S (Single)",picCtrl:"Standard",
+    tip:"Ask permission with a smile and gesture. Shoot at 50mm from across the table. Include their kopi cup and newspaper for story.",
+    why:"50mm at f/3.5 gives beautiful background blur that isolates the person. Face/Eye detection nails focus on the eyes every time. The coffee cup and newspaper tell a uniquely Singaporean story.",
+    shutter:"Auto"},
+  {id:"changi-planes",emoji:"✈️",title:"Planes at Changi Beach",sub:"Landing aircraft, sunset backdrop",
+    lens:"50-250mm (at 250mm)",mode:"S",aperture:"Auto",iso:"Auto",af:"Continuous AF (AF-C)",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"250mm fills the frame with the plane. 1/1000s freezes it mid-air. Track with continuous AF. Best at sunset with the plane silhouetted.",
+    why:"Planes move fast — you need 1/1000s minimum. Continuous AF tracks the approaching aircraft. Burst mode gives you dozens of frames to pick the perfect composition.",
+    shutter:"1/1000s"},
+  {id:"dusty-road-ubin",emoji:"🌬️",title:"Dusty Bike Trails (Ubin)",sub:"Gravel dust, jungle paths",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"Auto",af:"Auto Area",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"Have your friend ride past you and shoot the dust cloud trailing behind. Backlight it for maximum visibility. 1/500s freezes the particles.",
+    why:"Dust works exactly like smoke — it needs backlight to glow. Position yourself so the sun is behind the dust cloud. The suspended particles create a dramatic, gritty atmosphere.",
+    shutter:"1/500s"},
+  {id:"dancers-cultural",emoji:"💃",title:"Cultural Dance Performances",sub:"Chinese opera, Malay dance, Indian classical",
+    lens:"50-250mm",mode:"S",aperture:"Auto",iso:"Auto (up to 6400)",af:"Continuous AF (AF-C)",release:"CH (Burst)",picCtrl:"Vivid",
+    tip:"1/250s for sharp costumes with slight hand/fabric blur showing movement. Use burst. Vivid for the elaborate costume colors.",
+    why:"Slightly slower than 'freeze' speed (1/250s vs 1/1000s) lets flowing fabric and spinning movements show intentional blur while the face stays sharp. This conveys grace and energy.",
+    shutter:"1/250s"},
+  {id:"night-workers",emoji:"🧹",title:"Night Workers & Cleaners",sub:"The unseen city after midnight",
+    lens:"16-50mm",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 12800)",af:"Auto Area (Face/Eye)",release:"S (Single)",picCtrl:"Standard",
+    tip:"The city's hidden heroes. Street cleaners, taxi drivers, security guards. Shoot wide at 16mm to include their environment.",
+    why:"Ultra-high ISO (12800) will be grainy but atmospheric — it suits the documentary mood. Wide angle at 16mm shows the person in context of the empty, lit streets around them.",
+    shutter:"Auto"},
+  {id:"kids-playground",emoji:"🧒",title:"Kids at Playground",sub:"Running, jumping, swinging",
+    lens:"50-250mm (at 100-200mm)",mode:"S",aperture:"Auto",iso:"Auto",af:"Auto Area (Subject Tracking)",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"1/500s freezes mid-air jumps. Burst mode + subject tracking. Get low — shoot from their eye level, not looking down.",
+    why:"Telephoto compresses the background, isolating the child. Shooting from their eye level makes the photo feel immersive rather than like a surveillance shot from above.",
+    shutter:"1/500s"},
+  {id:"sungei-buloh",emoji:"🐊",title:"Sungei Buloh Wetland Reserve",sub:"Crocodiles, mudskippers, mangroves",
+    lens:"50-250mm",mode:"A",aperture:"f/6.3 (widest at tele)",iso:"Auto (up to 3200)",af:"Single Point AF",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"Use SINGLE POINT AF to focus through mangrove branches. Stay very still on the boardwalk! Crocs bask near the observation tower.",
+    why:"If you use Auto Area AF in mangroves, the camera grabs the nearest branch instead of the croc. Single Point AF gives you precise control to punch focus past foliage.",
+    shutter:"Auto"}
 ];
 
-const ALL_LOCATIONS=[];
-DAYS.forEach(d=>{
-  d.events.forEach(e=>{
-    if(e.places) e.places.forEach(p=>{
-      if(!ALL_LOCATIONS.find(l=>l[0]===p[0])) ALL_LOCATIONS.push([...p,d.date,e.time,d.id]);
-    });
-    if(e.altPlaces) e.altPlaces.forEach(p=>{
-      if(!ALL_LOCATIONS.find(l=>l[0]===p[0])) ALL_LOCATIONS.push([...p,d.date,"Alt",d.id]);
-    });
-  });
-  if(d.dayLocations) d.dayLocations.forEach(p=>{
-    if(!ALL_LOCATIONS.find(l=>l[0]===p[0])) ALL_LOCATIONS.push([...p,d.date,"",d.id]);
-  });
-});
-
-const QUICK_REF=[
-  {title:"Hotels",icon:"🏨",items:[
-    {label:"Days 1–4: Hotel Waterloo (Handwritten Collection)",detail:"78 Waterloo St, Singapore",map:"Hotel Waterloo 78 Waterloo St Singapore"},
-    {label:"Days 4–6: The Majestic Malacca",detail:"188 Jln Bunga Raya, Melaka. Restored 1920s mansion.",map:"The Majestic Malacca 188 Jln Bunga Raya Melaka"},
-    {label:"Days 6–8: M Social Hotel",detail:"90 Robertson Quay, Clarke Quay, Singapore",map:"M Social Hotel Robertson Quay Singapore"}
-  ]},
-  {title:"Transport",icon:"🚇",items:[
-    {label:"Singapore MRT",detail:"Changi → Fort Canning (DT20). Khatib (NS14) for Mandai. Use contactless bank card."},
-    {label:"KKKL / 707 Inc Bus",detail:"Queen Street → Melaka Sentral (~4–4.5 hrs). Super VIP reclining seats.",map:"Queen Street Bus Terminal Singapore"},
-    {label:"Grab App",detail:"Ride-hailing in SG & Melaka. Download beforehand. Melaka fares ~RM10."},
-    {label:"Mandai Shuttle",detail:"From Khatib MRT to Bird Paradise."},
-    {label:"Sentosa Express",detail:"Monorail from VivoCity to Sentosa Island.",map:"Sentosa Express Singapore"},
-    {label:"Pulau Ubin Bumboat",detail:"S$4 from Changi Point Ferry Terminal. Last boat back ~5 PM.",map:"Changi Point Ferry Terminal Singapore"}
-  ]},
-  {title:"Must-Remember",icon:"⚠️",items:[
-    {label:"Passport",detail:"Required for Melaka bus crossing Day 4 AND return Day 6."},
-    {label:"Chingay Tickets",detail:"SISTIC Raffles City Level 3, Day 1 afternoon. Hotline: +65 6348 5555"},
-    {label:"Historian Tour",detail:"Book at The Majestic reception on Day 4 check-in."},
-    {label:"Sunday Mass 10:30 AM",detail:"Cathedral of the Good Shepherd, Day 3."},
-    {label:"All Hotels Include Breakfast",detail:"Don't double-book morning meals!"},
-    {label:"Standing Sushi Bar closes 21:00",detail:"Moved to Saturday evening (Day 2). Get there by 20:00."},
-    {label:"Garden Rhapsody",detail:"Free light show at Gardens by the Bay: 19:45 & 20:45 nightly."},
-    {label:"Pulau Ubin last boat ~5 PM",detail:"Don't miss the last bumboat back!"}
-  ]},
-  {title:"Gear",icon:"🔭",items:[
-    {label:"Crivit 12x36 Binoculars",detail:"Bird Paradise (Day 2), MacRitchie (Day 7), Batu Berendam (Day 6), Pulau Ubin (Day 7)."},
-    {label:"Rain Poncho",detail:"Tropical weather. Essential for Chingay Parade and jungle walks."}
-  ]},
-  {title:"Minority Districts",icon:"🌏",items:[
-    {label:"Little India Deep Dive (Day 2)",detail:"Serangoon Rd, Sri Veeramakaliamman Temple, House of Tan Teng Niah, Mustafa Centre 24/7.",map:"Serangoon Road Little India Singapore"},
-    {label:"Chinatown Deep Dive (Day 3)",detail:"Pagoda St, Buddha Tooth Relic Temple, Sri Mariamman Temple, Chinatown Food Street, Chinatown Complex.",map:"Chinatown Singapore"},
-    {label:"Kampong Glam (Day 2)",detail:"Sultan Mosque, Haji Lane murals, Zam Zam.",map:"Kampong Glam Singapore"},
-    {label:"Katong / Joo Chiat (Day 7)",detail:"Peranakan shophouses, Koon Seng Road pastel facades.",map:"Joo Chiat Singapore"}
-  ]},
-  {title:"Bars & Nightlife",icon:"🍺",items:[
-    {label:"Mama Diam (Day 1)",detail:"No-frills legend. Cheap beers, local vibes, open late.",map:"Mama Diam Singapore"},
-    {label:"Standing Sushi Bar (Day 2, 8PM)",detail:"Odeon Towers. S$2 sake, S$5 beers. Closes 21:00!",map:"Standing Sushi Bar Odeon Towers Singapore"},
-    {label:"Atlas Bar (Day 1 Alt)",detail:"Art deco lobby. High-end cocktails.",map:"Atlas Bar Singapore"},
-    {label:"CHIJMES (Day 1 Alt)",detail:"Heritage courtyard drinks.",map:"CHIJMES Singapore"},
-    {label:"Mr. Punch Public House (Day 3 Alt)",detail:"Rooftop bar, nostalgic vibe.",map:"Mr Punch Public House Singapore"},
-    {label:"Reggae on the River (Day 4–5)",detail:"Melaka riverside. Chill vibes, local prices.",map:"Reggae on the River Melaka"},
-    {label:"Geographer Cafe (Day 5)",detail:"Iconic Jonker Street cafe.",map:"Geographer Cafe Melaka"},
-    {label:"Coq & Balls (Day 7)",detail:"Kim Tian Rd, Tiong Bahru. Hidden under HDB. No tourists.",map:"Coq and Balls Kim Tian Road Singapore"},
-    {label:"Clarke Quay",detail:"Walking distance from M Social.",map:"Clarke Quay Singapore"}
-  ]},
-  {title:"Key Food Spots",icon:"🍛",items:[
-    {label:"Albert Centre Market (Day 1)",detail:"2 min from Hotel Waterloo.",map:"Albert Centre Market Singapore"},
-    {label:"Hjh Maimunah (Day 1 Alt)",detail:"Famous Nasi Padang.",map:"Hjh Maimunah Singapore"},
-    {label:"Chinatown Food Street (Day 3)",detail:"Outdoor hawker street in Chinatown.",map:"Chinatown Food Street Singapore"},
-    {label:"Zam Zam Restaurant (Day 2)",detail:"Murtabak ~S$8. Since 1908.",map:"Zam Zam Restaurant Singapore"},
-    {label:"Tekka Centre (Day 2 Alt)",detail:"Little India hawker market.",map:"Tekka Centre Singapore"},
-    {label:"Pak Putra Tandoori (Day 4)",detail:"Melaka legend. Tandoori on banana leaf.",map:"Pak Putra Tandoori Melaka"},
-    {label:"Poh Piah Lwee (Day 5)",detail:"Pork lard spring rolls.",map:"Poh Piah Lwee Melaka"},
-    {label:"Hoe Kee (Day 5)",detail:"Chicken rice balls.",map:"Hoe Kee Chicken Rice Ball Melaka"},
-    {label:"Tiong Bahru Market (Day 7 Alt)",detail:"Legendary hawker lunch.",map:"Tiong Bahru Market Singapore"},
-    {label:"328 Katong Laksa (Day 7)",detail:"Iconic spicy coconut noodle soup.",map:"328 Katong Laksa Singapore"},
-    {label:"Lau Pa Sat (Day 7 Alt)",detail:"Satay Street supper.",map:"Lau Pa Sat Singapore"}
-  ]},
-  {title:"Shopping & Tech",icon:"🛍️",items:[
-    {label:"Funan Digital Life Mall (Day 3)",detail:"Tech, gadgets, robots, drones. Near Fort Canning.",map:"Funan Mall Singapore"},
-    {label:"Mustafa Centre (Day 2)",detail:"24/7 everything store in Little India.",map:"Mustafa Centre Singapore"},
-    {label:"Bugis+ / Bugis Junction",detail:"Near Hotel Waterloo. Indoor shopping.",map:"Bugis Junction Singapore"},
-    {label:"VivoCity",detail:"Harbourfront mega-mall. Gateway to Sentosa.",map:"VivoCity Singapore"}
-  ]},
-  {title:"Beaches & Nature",icon:"🏖️",items:[
-    {label:"Sentosa Island (Day 6)",detail:"Beaches, S.E.A. Aquarium, walks. Monorail from VivoCity.",map:"Sentosa Island Singapore"},
-    {label:"Palawan Beach (Day 6)",detail:"Southernmost point of continental Asia!",map:"Palawan Beach Sentosa Singapore"},
-    {label:"Pulau Ubin (Day 7)",detail:"Rustic island. Bumboat S$4, bike to Chek Jawa Wetlands.",map:"Pulau Ubin Singapore"},
-    {label:"MacRitchie TreeTop Walk (Day 7)",detail:"250m suspension bridge through jungle canopy.",map:"MacRitchie TreeTop Walk Singapore"},
-    {label:"Gardens by the Bay (Day 3)",detail:"Supertree Grove, free light show at 19:45.",map:"Gardens by the Bay Singapore"}
-  ]}
+const MK=[
+  {id:"dutch-sq",emoji:"🏛️",title:"Dutch Square (Red Square)",sub:"Red buildings, Christ Church",
+    lens:"16-50mm",mode:"A",aperture:"f/5.6–f/8",iso:"Auto",af:"Auto Area",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Vivid to make the red buildings pop against the blue sky. Include the colorful trishaws for foreground.",
+    why:"f/8 keeps the entire building sharp front to back. Late afternoon gives warm golden light on the red walls that is absolutely stunning.",
+    shutter:"Auto"},
+  {id:"river-walk",emoji:"🎨",title:"Melaka River Walk",sub:"Murals, reflections, boats",
+    lens:"16-50mm",mode:"A",aperture:"f/5.6",iso:"Auto",af:"Auto Area",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Capture the colorful murals on river buildings. Evening: reflections with lit-up buildings are magical.",
+    why:"Vivid makes the street art murals pop. f/5.6 keeps the wall sharp while slightly softening the river behind. Evening reflections double your composition for free.",
+    shutter:"Auto"},
+  {id:"baba-nyonya",emoji:"🏠",title:"Baba Nyonya Museum",sub:"Ornate Peranakan interior",
+    lens:"16-50mm",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 6400)",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Standard",
+    tip:"Overexpose +0.7 for the dim interior. Focus on the tile details and furniture carvings.",
+    why:"Heritage museum interiors are deliberately dim for preservation. You need every bit of light. Touch-focus on the intricate Peranakan tile patterns for stunning detail shots.",
+    shutter:"Auto",expComp:"+0.7"},
+  {id:"pak-putra",emoji:"🍗",title:"Pak Putra Tandoori",sub:"Roadside stall, flames, naan",
+    lens:"16-50mm",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 6400)",af:"Auto Area",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Capture the tandoor oven flames. The cook pulling naan from the oven is THE action shot.",
+    why:"Wide aperture handles the dim roadside lighting. Vivid makes the flames orange and the naan golden. Time your shot for when the cook stretches the dough.",
+    shutter:"Auto",expComp:"+0.3"},
+  {id:"floating-mosque",emoji:"🕌",title:"Floating Mosque Sunset",sub:"Masjid Selat at golden hour",
+    lens:"16-50mm",mode:"A",aperture:"f/8–f/11",iso:"100",af:"Single AF (AF-S)",release:"Timer 2s",picCtrl:"Standard",
+    tip:"UNDEREXPOSE -0.7 for dramatic silhouette. Rest camera on anything solid. Arrive 20 min before sunset.",
+    why:"Underexposure creates a dramatic silhouette of the mosque against the fiery sunset sky. After the sun dips, the purple/orange sky behind the white mosque is THE shot of the trip.",
+    shutter:"Auto (slow — brace!)",expComp:"-0.7"},
+  {id:"jonker",emoji:"🏮",title:"Jonker Street Night Market",sub:"Neon, crowds, street food",
+    lens:"16-50mm",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 6400)",af:"Auto Area",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Embrace the grain. Expose comp -0.7 keeps the night looking like night and prevents neon blowout.",
+    why:"Without negative exposure compensation, the camera turns the night scene grey and the neon signs become blown-out white blobs. -0.7 keeps the mood dark and the neons sharp.",
+    shutter:"Auto",expComp:"-0.7"},
+  {id:"batu-berendam",emoji:"🐦",title:"Batu Berendam Herons",sub:"Dawn bird colony, flight",
+    lens:"50-250mm",mode:"S",aperture:"Auto",iso:"Auto",af:"Auto Area (Subject Tracking)",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"1/1000s for birds in flight. Arrive at 7 AM for golden dawn light. Use Crivit binoculars to spot Openbills.",
+    why:"Shutter Priority at 1/1000s ensures the fast-moving herons are frozen mid-flight. Dawn light is warm and golden — the best light of the entire day.",
+    shutter:"1/1000s",expComp:"+0.3"},
+  {id:"reggae",emoji:"🎶",title:"Reggae on the River",sub:"Riverside bar, live music",
+    lens:"16-50mm",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 6400)",af:"Auto Area",release:"S (Single)",picCtrl:"Standard",
+    tip:"Capture the musicians with the river behind them. Include fairy lights and beer bottles for atmosphere.",
+    why:"Wide aperture in dim bar lighting. Standard mode preserves the warm, relaxed atmosphere without oversaturating the already-moody scene.",
+    shutter:"Auto"},
+  {id:"nyonya-food",emoji:"🥟",title:"Nyonya Food Close-ups",sub:"Popiah, chicken rice balls, cendol",
+    lens:"16-50mm (at 50mm)",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Get close. Brace elbows on the table. Touch-focus on the main element of the dish.",
+    why:"Wide aperture blurs the background, making the food the clear hero. Single-point AF lets you choose exactly which part of the dish is sharpest.",
+    shutter:"Auto"},
+  {id:"st-pauls",emoji:"⛰️",title:"St. Paul's Hill View",sub:"Panoramic view of Melaka",
+    lens:"16-50mm (at 16mm)",mode:"A",aperture:"f/8–f/11",iso:"Auto",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Standard",
+    tip:"f/11 for maximum landscape sharpness. Include the old stone walls as a frame in the foreground.",
+    why:"Narrow aperture keeps everything sharp from the ruins in the foreground to the city skyline in the background. The old walls create a natural frame.",
+    shutter:"Auto"},
+  {id:"trishaw-rider",emoji:"🛺",title:"Trishaw Riders in Motion",sub:"Neon trishaws, moving through traffic",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"Auto",af:"Continuous AF (AF-C)",release:"CH (Burst)",picCtrl:"Vivid",
+    tip:"Pan at 1/30s to blur the street while the trishaw stays sharp. The neon-lit trishaws at night are AMAZING for this.",
+    why:"Panning with the trishaw creates dynamic background streaks. Vivid makes the neon decorations pop. Burst mode during the pan gives you multiple frames — one will be perfectly timed.",
+    shutter:"1/30s (pan)"},
+  {id:"kampung-kling",emoji:"🕌",title:"Kampung Kling Mosque",sub:"Sumatran architecture, courtyard",
+    lens:"16-50mm (at 16mm)",mode:"A",aperture:"f/5.6–f/8",iso:"Auto",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Standard",
+    tip:"The minaret is stunning from the street. The courtyard has beautiful tiled floors — include them. Remove shoes quietly.",
+    why:"The mix of Sumatran, Chinese, and Hindu architecture is unique. f/8 keeps the intricate details sharp from floor tiles to ceiling carvings.",
+    shutter:"Auto"},
+  {id:"melaka-fishermen",emoji:"🎣",title:"Fishermen at Dawn",sub:"Portuguese Settlement fishing boats",
+    lens:"50-250mm",mode:"S",aperture:"Auto",iso:"Auto",af:"Continuous AF (AF-C)",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"Arrive at 6 AM. 1/500s freezes casting nets. The golden dawn light through the spray is magical. Include the wooden boats.",
+    why:"Dawn light at the Portuguese Settlement is warm and directional. The backlit water spray from casting nets turns into golden droplets at 1/500s.",
+    shutter:"1/500s"},
+  {id:"melaka-dust-demo",emoji:"🏚️",title:"Old Town Demolition Dust",sub:"Renovation sites, falling plaster",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"Auto",af:"Auto Area",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"Melaka's old shophouses are constantly being renovated. Shoot the plaster dust backlit through doorways. Protect your lens with a UV filter.",
+    why:"Construction dust in a shaft of light through an old doorway creates an incredibly atmospheric shot. The suspended particles look like tiny stars. Always use a UV filter to protect your glass.",
+    shutter:"1/250s"},
+  {id:"river-cruise-people",emoji:"🚤",title:"River Cruise Passengers",sub:"People on boats, evening light",
+    lens:"50-250mm",mode:"S",aperture:"Auto",iso:"Auto (up to 3200)",af:"Continuous AF (AF-C)",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"Shoot from the bridges as boats pass below. 1/250s freezes passengers waving. Include the colorful murals on the riverbank behind.",
+    why:"The elevated bridge angle lets you shoot down into the passing boats. Continuous AF tracks the moving boat. The murals behind add layers of color and context.",
+    shutter:"1/250s"},
+  {id:"street-sweeper",emoji:"🧹",title:"Morning Street Sweepers",sub:"Quiet predawn Jonker Street",
+    lens:"16-50mm",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 6400)",af:"Auto Area",release:"S (Single)",picCtrl:"Standard",
+    tip:"5:30 AM before the tourists wake. The sweepers create small dust clouds in the golden first light. Absolutely magical.",
+    why:"Empty Jonker Street at dawn with a single sweeper and backlit dust is one of the most poetic shots you can get. The silence and solitude contrast with the night market chaos.",
+    shutter:"Auto",expComp:"+0.3"}
 ];
 
-function AltsSection({alts,altPlaces}){
-  const[open,setOpen]=useState(false);
-  if(!alts) return null;
-  const allSame=alts.rain===alts.tired&&alts.tired===alts.skip;
+const STYLES=[
+  {id:"portrait",emoji:"🤳",title:"Portraits & Couple Selfies",sub:"Your wife, locals, vendors",
+    lens:"16-50mm (zoom to 50mm)",mode:"A",aperture:"f/3.5 (widest possible)",iso:"Auto",af:"Auto Area (Face/Eye Detection)",release:"S (Single)",picCtrl:"Portrait or Standard",
+    tip:"Zoom to 50mm, get close. Make sure background is far away for maximum blur. Flip screen for selfies!",
+    why:"Lower f-numbers create shallow depth of field, blurring the background and making your subject pop. The Zfc has excellent face and eye detection that locks onto faces instantly.",
+    shutter:"Auto",expComp:"+0.3"},
+  {id:"street-candid",emoji:"🚶",title:"Candid Street Photography",sub:"Walking people, daily life",
+    lens:"16-50mm (at 35mm)",mode:"A",aperture:"f/5.6–f/8",iso:"Auto (up to 3200)",af:"Auto Area",release:"S (Single)",picCtrl:"Standard",
+    tip:"Use the flip screen at hip height. Touch-shutter: tap screen = focus + shoot instantly. Nobody notices.",
+    why:"Hip-shooting with the flip screen is the most discreet way to capture authentic street moments. Touch-shutter eliminates the need to look through the viewfinder.",
+    shutter:"Auto"},
+  {id:"motion-blur",emoji:"💨",title:"Creative Motion Blur",sub:"Bustling markets, moving trains",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"Auto",af:"Auto Area",release:"S (Single)",picCtrl:"Standard",
+    tip:"Set 1/25s or 1/50s. Keep camera steady while the subject moves through the frame. Pan with them for a different look.",
+    why:"A slower shutter speed introduces intentional blur to moving subjects, conveying speed and energy. Panning (moving the camera to follow the subject) blurs only the background.",
+    shutter:"1/25–1/50s"},
+  {id:"light-trails",emoji:"🚗",title:"Light Trails & Traffic",sub:"Car trails, busy roads",
+    lens:"16-50mm",mode:"M or S",aperture:"f/8–f/11",iso:"100 (manual)",af:"Manual Focus (use Peaking)",release:"Timer 2s",picCtrl:"Standard",
+    tip:"YOU NEED A FLAT SURFACE. Set shutter 10–30 seconds. Use 2-second timer. ISO must be 100.",
+    why:"A long shutter captures moving car lights as streaks across the frame. Manual focus with peaking ensures sharp focus in the dark when autofocus fails.",
+    shutter:"10–30 sec"},
+  {id:"fast-action",emoji:"⚡",title:"Fast Action / Sports",sub:"Running, jumping, fast movement",
+    lens:"Either lens",mode:"S",aperture:"Auto",iso:"Auto",af:"Auto Area (Subject Tracking)",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"1/500s to 1/1000s to freeze motion completely. Hold shutter down for burst. Let AF track.",
+    why:"Shutter Priority mode lets you dictate exactly how motion is captured. The camera adjusts aperture automatically. Burst mode gives you many frames to pick the perfect one.",
+    shutter:"1/500–1/1000s"},
+  {id:"panning",emoji:"🏃",title:"Panning Shot",sub:"Sharp subject, blurred background",
+    lens:"16-50mm (at 50mm)",mode:"S",aperture:"Auto",iso:"Auto",af:"Continuous AF (AF-C)",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"1/30s–1/60s. Follow the subject smoothly with your whole body. Fire burst as you pan. Keep panning after the shot.",
+    why:"Panning at a slow shutter speed blurs the background while keeping the subject sharp. It requires practice — burst mode gives you many tries in one pass.",
+    shutter:"1/30–1/60s"},
+  {id:"silhouette",emoji:"🌅",title:"Silhouette at Sunset",sub:"People against the sunset sky",
+    lens:"16-50mm",mode:"A",aperture:"f/8–f/11",iso:"100–400",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Standard",
+    tip:"Point the camera at the bright sky (not the person). Lock exposure. Recompose with the person in frame. Underexpose -1.0.",
+    why:"Extreme underexposure turns the subject into a black silhouette against the colorful sky. f/8 keeps both the person and the sky sharp.",
+    shutter:"Auto",expComp:"-1.0"},
+  {id:"rain",emoji:"🌧️",title:"Shooting in Tropical Rain",sub:"Wet streets, reflections, drops",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"Auto",af:"Auto Area",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"1/500s freezes raindrops mid-air. Shoot the wet reflections on the ground. Protect your camera with a ziplock bag with a hole for the lens!",
+    why:"Tropical rain creates incredible reflections on wet streets — doubling neon signs and lights. Fast shutter freezes individual raindrops. The Zfc is NOT weather-sealed, so protect it!",
+    shutter:"1/500s"},
+  {id:"bokeh",emoji:"✨",title:"Bokeh Lights",sub:"Night city, fairy lights, lanterns",
+    lens:"16-50mm (at 50mm)",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Standard",
+    tip:"Focus on something close (your hand, a railing). The out-of-focus lights behind become beautiful bokeh balls.",
+    why:"Wide aperture + telephoto + close subject + distant lights = maximum bokeh. The circular light balls add magic to any night scene.",
+    shutter:"Auto"},
+  {id:"flat-lay",emoji:"📱",title:"Flat-Lay Food Shot",sub:"Top-down table arrangement",
+    lens:"16-50mm (at 35mm)",mode:"A",aperture:"f/5.6–f/8",iso:"Auto",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Stand up and shoot straight down. Arrange dishes in a grid. Use f/8 to keep everything sharp edge-to-edge.",
+    why:"f/5.6 to f/8 ensures all the dishes on the table are equally sharp. Vivid makes the colors appetizing. Arrange the dishes with gaps between them for a clean composition.",
+    shutter:"Auto"},
+  {id:"dust",emoji:"🌫️",title:"Dusty / Hazy Atmosphere",sub:"Morning mist, incense smoke, haze",
+    lens:"16-50mm",mode:"A",aperture:"f/5.6",iso:"Auto",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Standard",
+    tip:"OVEREXPOSE +0.7 to +1.0 to make the haze glow. Shoot into the light (backlit) for rays through smoke.",
+    why:"Haze and smoke scatter light beautifully when backlit. The camera underexposes hazy scenes — you need to compensate up to reveal the ethereal, glowing quality.",
+    shutter:"Auto",expComp:"+0.7 to +1.0"},
+  {id:"reflection",emoji:"🪞",title:"Water Reflections",sub:"Rivers, puddles, wet floors",
+    lens:"16-50mm",mode:"A",aperture:"f/5.6–f/8",iso:"Auto",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Vivid",
+    tip:"Get LOW. The closer you are to the water/puddle, the better the reflection. Flip screen is your friend here.",
+    why:"Reflections work best at a low angle — the reflection becomes clearer and larger. The flip screen lets you compose from ground level without lying in a puddle.",
+    shutter:"Auto"},
+  {id:"street-portrait",emoji:"🧔",title:"Street Portrait (Stranger)",sub:"Ask, pose, shoot, thank",
+    lens:"16-50mm (at 50mm)",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto (up to 3200)",af:"Auto Area (Face/Eye)",release:"S (Single)",picCtrl:"Standard",
+    tip:"Smile, point at camera, gesture 'may I?'. Zoom to 50mm. Stand 1.5m away. Focus on their eyes. Show them the photo after.",
+    why:"50mm at f/3.5 creates the most flattering perspective with nice background blur. Face/Eye AF is nearly instant. Showing the photo after builds trust and often gets you an even better second shot.",
+    shutter:"Auto",expComp:"+0.3"},
+  {id:"decisive-moment",emoji:"⏱️",title:"The Decisive Moment",sub:"Anticipate, pre-focus, capture",
+    lens:"16-50mm (at 35mm)",mode:"A",aperture:"f/5.6–f/8",iso:"Auto",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Standard",
+    tip:"Pre-focus on a spot (a doorway, a crossing). Wait. When someone walks into the frame — shoot. Patience is everything.",
+    why:"Pre-focusing eliminates AF delay. f/8 gives a deep depth of field so even if the person is slightly off your focus point, they are still sharp. This is classic Henri Cartier-Bresson technique.",
+    shutter:"Auto"},
+  {id:"long-exposure-people",emoji:"👻",title:"Ghost People (Long Exposure)",sub:"Moving people become transparent",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"100 (manual)",af:"Single AF (AF-S)",release:"Timer 2s",picCtrl:"Standard",
+    tip:"Daytime: you need an ND filter. Night: set 2–4 sec on a ledge. Moving people blur into ghosts while buildings stay sharp.",
+    why:"People walking through a long exposure become transparent, ghostly streaks. It is a powerful way to show the passage of time and the busyness of a location.",
+    shutter:"2–4 sec (night) / 1–2 sec (with ND filter day)"},
+  {id:"smoke-incense",emoji:"🌫️",title:"Smoke & Incense Trails",sub:"Temples, street stalls, mosquito coils",
+    lens:"16-50mm (at 50mm)",mode:"A",aperture:"f/3.5 (widest)",iso:"Auto",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Standard",
+    tip:"Find a dark background with a single light source. The smoke trails become visible art. Zoom to 50mm to isolate individual coils.",
+    why:"Smoke is only visible when lit from one side against a dark background. The contrast makes the delicate swirling patterns pop. Telephoto isolates just the smoke from distracting surroundings.",
+    shutter:"Auto"},
+  {id:"moving-vehicle",emoji:"🚕",title:"From a Moving Vehicle",sub:"Taxi, Grab, bus, tram shots",
+    lens:"16-50mm",mode:"S",aperture:"Auto",iso:"Auto",af:"Auto Area",release:"CH (Burst)",picCtrl:"Standard",
+    tip:"1/500s minimum to counteract vehicle vibration. Shoot through an open window (not through glass). Lean your elbow on the window frame.",
+    why:"Vehicle vibration adds camera shake on top of the already moving scenery. You need a fast shutter to freeze both. An open window eliminates glass reflections and distortion.",
+    shutter:"1/500s"},
+  {id:"layer-shot",emoji:"📐",title:"Layered Street Scene",sub:"Foreground + subject + background",
+    lens:"16-50mm",mode:"A",aperture:"f/5.6",iso:"Auto",af:"Auto Area",release:"S (Single)",picCtrl:"Standard",
+    tip:"Include 3 layers: something close (a pillar, a plant), your main subject (a person, a stall), and a distant background (a building, sky).",
+    why:"Three layers create depth and draw the viewer's eye through the image. f/5.6 keeps the middle layer sharp while slightly softening the foreground and background, creating natural depth.",
+    shutter:"Auto"},
+  {id:"shadow-play",emoji:"🌗",title:"Shadow & Silhouette Play",sub:"Hard tropical sun, strong shadows",
+    lens:"16-50mm",mode:"A",aperture:"f/8",iso:"Auto",af:"Single AF (AF-S)",release:"S (Single)",picCtrl:"Monochrome",
+    tip:"Singapore's harsh midday sun creates dramatic shadows. Shoot people's shadows on the ground. Switch to Monochrome Picture Control.",
+    why:"Harsh sun is usually 'bad' light for photos — but it creates incredible shadows. In B&W (Monochrome mode), the strong contrast between light and shadow becomes the entire composition.",
+    shutter:"Auto",expComp:"-0.3"}
+];
+
+const TIPS=[
+  {id:"monochrome",emoji:"⬛",title:"Monochrome Warm-up",sub:"Train your eye at new locations",
+    tip:'Spend the first 5 minutes at each new location shooting in black & white. Press "i" button → Set Picture Control → Monochrome.',
+    why:"Removing color forces you to see shapes, contrast, lighting, and textures. These fundamentals make ALL your photos better. Switch back to Vivid/Standard when you are ready to shoot for real."},
+  {id:"touch-shutter",emoji:"👆",title:"Touch Shutter (Stealth Mode)",sub:"Tap screen = focus + shoot",
+    tip:"Tap the screen icon → enable Touch AF/Shutter. Now simply tap anywhere on the screen to focus and take the photo instantly.",
+    why:"This is brilliant for street photography. People are much less likely to notice you taking a photo if you are just tapping the screen at waist height rather than holding the camera to your eye."},
+  {id:"exp-comp",emoji:"☀️",title:"Exposure Compensation Dial",sub:"The most important dial on the Zfc",
+    tip:"The dedicated +/- dial on top of the camera is your best friend. Bright scene (beach, snow)? Turn to +0.7. Dark scene (night, bar)? Try -0.3. Done.",
+    why:"This is the fastest way to fix lighting in Aperture Priority mode. Think of it as a 'brightness wheel'. After shooting, ALWAYS return it to zero!"},
+  {id:"battery",emoji:"🔋",title:"Save Battery (Long Days)",sub:"Make your battery last all day",
+    tip:"Press DISP button until only settings show (no live view). Now you are only using the EVF (electronic viewfinder), which uses 40% less battery!",
+    why:"The big rear LCD screen is the biggest battery drain. Using only the EVF (the small viewfinder you put your eye to) dramatically extends battery life for those long Singapore days."},
+  {id:"focus-peaking",emoji:"🎯",title:"Manual Focus Peaking",sub:"For pitch black environments",
+    tip:"Menu → Custom Settings → Focus Peaking → Level 2 (Red). When AF fails in the dark, switch to MF and red highlights show you what is in focus.",
+    why:"In very dark scenes (Night Safari, dim temples), autofocus hunts and fails. Manual focus with peaking shows you exactly what is sharp by highlighting edges in bright red."},
+  {id:"silent",emoji:"🤫",title:"Silent Shutter Mode",sub:"For temples, churches, ceremonies",
+    tip:"Menu → Photo Shooting → Silent Photography → ON. Zero shutter sound — essential during Sunday Mass or mosque visits.",
+    why:"The mechanical shutter click is loud and disruptive in quiet sacred spaces. Silent electronic shutter mode is completely silent while producing identical image quality."},
+  {id:"histogram",emoji:"📊",title:"Read the Histogram",sub:"Never blow highlights again",
+    tip:"Press DISP until you see the histogram. If the graph touches the RIGHT edge, you are overexposing (losing detail in bright areas). Dial exposure comp DOWN.",
+    why:"Your eyes lie in bright sunlight — the screen looks darker than reality. The histogram is mathematical truth. If it touches the right edge, those white areas have ZERO detail and cannot be recovered."},
+  {id:"back-button",emoji:"🔙",title:"Back-Button Focus",sub:"Separate focus from shutter",
+    tip:"Assign AF-ON to the AE-L/AF-L button via Custom Settings. Now the shutter button ONLY takes photos, and the back button ONLY focuses.",
+    why:"This lets you focus once, then take multiple shots without the camera re-focusing each time. Crucial for recomposing shots and for situations where AF might re-lock on the wrong subject."},
+  {id:"lens-swap",emoji:"🔄",title:"Lens Swap in Humidity",sub:"Avoid condensation and dust",
+    tip:"In Singapore's humidity, NEVER swap lenses in open air. Step into an air-conditioned space (café, MRT station) to swap. Let the camera acclimatize for 2 min.",
+    why:"Hot humid air hitting a cool sensor creates condensation that can fog your images and potentially damage electronics. Air-conditioned spaces have dry air — much safer for lens changes."},
+  {id:"raw-jpeg",emoji:"💾",title:"When to Shoot RAW",sub:"Know when you need the extra data",
+    tip:"Daytime = JPEG Fine is perfect. Night / tricky lighting / sunsets = switch to RAW (press i → Image Quality → RAW). RAW files are 3x larger but save much more detail.",
+    why:"RAW files contain all the data from the sensor, letting you recover blown highlights and dark shadows in editing. For most daytime shots, JPEG Fine is excellent and saves storage."}
+];
+
+function DetailView({item,onBack}){
+  const hasSettings=!!item.mode;
   return(
-    <div style={{marginTop:8}}>
-      <button onClick={()=>setOpen(!open)} style={{background:'none',border:'1px solid #475569',borderRadius:8,padding:'6px 12px',color:'#94a3b8',fontSize:12,cursor:'pointer',display:'flex',alignItems:'center',gap:6,width:'100%',justifyContent:'space-between'}}>
-        <span>Alternatives</span>
-        <span style={{transform:open?'rotate(180deg)':'rotate(0)',transition:'transform .2s',fontSize:10}}>▼</span>
-      </button>
-      {open&&(
-        <div className="fade-in" style={{marginTop:6,borderRadius:8,overflow:'hidden'}}>
-          {allSame?(
-            <div className="alt-card" style={{padding:'10px 12px',fontSize:13}}>
-              <span style={{marginRight:6}}>🌧️🥱🔄</span>{alts.rain}
-            </div>
-          ):(
-            <Fragment>
-              <div className="alt-card" style={{padding:'10px 12px',fontSize:13,borderBottom:'1px solid #1e293b'}}>
-                <span style={{marginRight:6}}>🌧️</span><strong style={{color:'#94a3b8'}}>Rain:</strong> {alts.rain}
-              </div>
-              <div className="alt-card" style={{padding:'10px 12px',fontSize:13,borderBottom:'1px solid #1e293b'}}>
-                <span style={{marginRight:6}}>🥱</span><strong style={{color:'#94a3b8'}}>Tired:</strong> {alts.tired}
-              </div>
-              <div className="alt-card" style={{padding:'10px 12px',fontSize:13}}>
-                <span style={{marginRight:6}}>🔄</span><strong style={{color:'#94a3b8'}}>Skip it:</strong> {alts.skip}
-              </div>
-            </Fragment>
-          )}
-          {altPlaces&&altPlaces.length>0&&(
-            <div style={{padding:'6px 10px',display:'flex',flexWrap:'wrap',gap:4,background:'#2d3748'}}>
-              {altPlaces.map((p,i)=><MapPill key={i} place={p[0]}>{p[1]}</MapPill>)}
-            </div>
-          )}
+    <div className="slide" style={{padding:16}}>
+      <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:14}}>
+        <span style={{fontSize:32}}>{item.emoji}</span>
+        <div style={{flex:1}}>
+          <h2 style={{fontSize:17,fontWeight:800,lineHeight:1.2}}>{item.title}</h2>
+          <p style={{fontSize:12,color:'var(--muted)'}}>{item.sub}</p>
+        </div>
+      </div>
+      {hasSettings&&(
+        <>
+        <div style={{background:'#000',borderRadius:12,padding:12,marginBottom:12,border:'1px solid var(--accent)'}}>
+          <div style={{fontSize:9,color:'var(--accent)',fontWeight:700,letterSpacing:1.5,marginBottom:6}}>ZFC MODE DIAL</div>
+          <div style={{fontSize:24,fontWeight:900,fontFamily:'Courier New',color:'var(--accent)',letterSpacing:3}}>
+            {item.mode==='A'?'A — APERTURE PRIORITY':item.mode==='S'?'S — SHUTTER PRIORITY':item.mode==='M'?'M — MANUAL':item.mode}
+          </div>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,marginBottom:12}}>
+          <div className="dial"><div className="dial-label">LENS</div><div className="dial-val" style={{color:'var(--text)',fontSize:12}}>{item.lens}</div></div>
+          <div className="dial"><div className="dial-label">APERTURE</div><div className="dial-val" style={{color:'var(--cyan)'}}>{item.aperture}</div></div>
+          <div className="dial"><div className="dial-label">SHUTTER</div><div className="dial-val" style={{color:'var(--red)'}}>{item.shutter}</div></div>
+          <div className="dial"><div className="dial-label">ISO</div><div className="dial-val" style={{color:'var(--green)',fontSize:12}}>{item.iso}</div></div>
+          <div className="dial"><div className="dial-label">AF MODE</div><div className="dial-val" style={{color:'var(--purple)',fontSize:11}}>{item.af}</div></div>
+          <div className="dial"><div className="dial-label">RELEASE</div><div className="dial-val" style={{color:'var(--text)',fontSize:12}}>{item.release}</div></div>
+        </div>
+        {(item.picCtrl||item.expComp)&&(
+          <div style={{display:'flex',gap:8,marginBottom:12}}>
+            {item.picCtrl&&<div style={{flex:1,background:'var(--card)',borderRadius:10,padding:'8px 10px'}}><div style={{fontSize:9,color:'var(--dim)',fontWeight:700,letterSpacing:1}}>PICTURE CTRL</div><div style={{fontSize:13,fontWeight:700,marginTop:2}}>{item.picCtrl}</div></div>}
+            {item.expComp&&<div style={{flex:1,background:'var(--card)',borderRadius:10,padding:'8px 10px'}}><div style={{fontSize:9,color:'var(--dim)',fontWeight:700,letterSpacing:1}}>EXPOSURE ±</div><div style={{fontSize:13,fontWeight:700,marginTop:2,color:'var(--accent)'}}>{item.expComp}</div></div>}
+          </div>
+        )}
+        </>
+      )}
+      <div className="tip-card" style={{marginBottom:10}}>
+        <div style={{fontSize:10,fontWeight:700,color:'var(--accent)',letterSpacing:1,marginBottom:4}}>⚡ QUICK TIP</div>
+        <p style={{fontSize:13,lineHeight:1.5,color:'#fef3c7'}}>{item.tip}</p>
+      </div>
+      {item.why&&(
+        <div className="why-card">
+          <div style={{fontSize:10,fontWeight:700,color:'var(--dim)',letterSpacing:1,marginBottom:4}}>💡 WHY THIS WORKS</div>
+          <p style={{fontSize:12,lineHeight:1.5,color:'#d4d4d8'}}>{item.why}</p>
         </div>
       )}
-    </div>
-  );
-}
-
-function EventCard({event}){
-  return(
-    <div className="fade-in" style={{position:'relative',paddingLeft:28,paddingBottom:20,minHeight:40}}>
-      <div style={{position:'absolute',left:0,top:4}}>
-        <div className="time-dot"></div>
-        <div className="time-line"></div>
-      </div>
-      <div style={{background:'#1e293b',borderRadius:12,padding:'12px 14px',marginLeft:4}}>
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',gap:8,flexWrap:'wrap'}}>
-          <div style={{display:'flex',alignItems:'center',gap:6,flexWrap:'wrap'}}>
-            <span style={{fontSize:11,color:'#f59e0b',fontWeight:700,fontFamily:'monospace',whiteSpace:'nowrap'}}>{event.time}</span>
-            {event.optional&&<span style={{fontSize:10,background:'#312e81',color:'#a5b4fc',padding:'1px 6px',borderRadius:4}}>Optional</span>}
-            {event.alert&&<span style={{fontSize:10,background:'#7f1d1d',color:'#fca5a5',padding:'1px 6px',borderRadius:4}}>⚠️ {event.alert}</span>}
-          </div>
-          <span style={{fontSize:18}}>{event.icon}</span>
-        </div>
-        <h3 style={{fontSize:15,fontWeight:700,margin:'4px 0 2px',lineHeight:1.3}}>{event.title}</h3>
-        <p style={{fontSize:13,color:'#cbd5e1',lineHeight:1.5,margin:0}}>{event.desc}</p>
-        {event.places&&(
-          <div style={{display:'flex',flexWrap:'wrap',gap:6,marginTop:8}}>
-            {event.places.map((p,i)=><MapLink key={i} place={p[0]}>{p[1]} →</MapLink>)}
-          </div>
-        )}
-        {event.bino&&(
-          <div className="bino-alert" style={{marginTop:8,padding:'8px 10px',borderRadius:8,fontSize:12,display:'flex',alignItems:'flex-start',gap:6}}>
-            <span style={{fontSize:16}}>🔭</span>
-            <span><strong>Binocular Alert:</strong> {event.bino}</span>
-          </div>
-        )}
-        {event.tip&&(
-          <div className="tip-box">
-            <span style={{marginRight:4}}>💡</span>{event.tip}
-          </div>
-        )}
-        <AltsSection alts={event.alts} altPlaces={event.altPlaces}/>
-      </div>
-    </div>
-  );
-}
-
-function DayLocationsBar({locations}){
-  if(!locations||!locations.length) return null;
-  return(
-    <div style={{margin:'0 0 16px',padding:'10px 12px',background:'#0d1117',borderRadius:10,border:'1px solid #1e293b'}}>
-      <div style={{fontSize:11,fontWeight:700,color:'#94a3b8',marginBottom:6}}>📍 TODAY'S LOCATIONS</div>
-      <div style={{display:'flex',flexWrap:'wrap',gap:4}}>
-        {locations.map((l,i)=><MapPill key={i} place={l[0]}>{l[1]}</MapPill>)}
-      </div>
-    </div>
-  );
-}
-
-function DayView({day}){
-  return(
-    <div className="fade-in" style={{padding:'0 16px 16px'}}>
-      {day.part&&(
-        <div style={{textAlign:'center',padding:'12px 0 4px'}}>
-          <span style={{fontSize:11,fontWeight:700,color:'#f59e0b',letterSpacing:2,textTransform:'uppercase'}}>{day.part}</span>
-        </div>
-      )}
-      <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:12,padding:'8px 0 4px'}}>
-        <span style={{fontSize:28}}>{day.emoji}</span>
-        <div>
-          <h2 style={{fontSize:18,fontWeight:800,lineHeight:1.2}}>{day.title}</h2>
-          <p style={{fontSize:12,color:'#94a3b8',margin:0}}>{day.date}</p>
-        </div>
-      </div>
-      <div style={{display:'flex',alignItems:'center',gap:6,marginBottom:14,padding:'8px 12px',background:'#1e1b4b',borderRadius:8,fontSize:12}}>
-        <span>🏨</span>
-        <MapLink place={day.hotelAddr}>{day.hotel}</MapLink>
-        <span style={{color:'#6366f1',fontSize:10}}>•</span>
-        <span style={{color:'#a5b4fc',fontSize:11,flex:1}}>{day.hotelAddr}</span>
-      </div>
-      {day.events.map((e,i)=><EventCard key={i} event={e}/>)}
-      <DayLocationsBar locations={day.dayLocations}/>
-    </div>
-  );
-}
-
-function ItineraryTab(){
-  const[activeDay,setActiveDay]=useState(1);
-  const scrollRef=useRef(null);
-  const contentRef=useRef(null);
-  const day=DAYS.find(d=>d.id===activeDay);
-  useEffect(()=>{
-    if(scrollRef.current){
-      const el=scrollRef.current.children[activeDay-1];
-      if(el) el.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
-    }
-    if(contentRef.current) contentRef.current.scrollTop=0;
-  },[activeDay]);
-  return(
-    <div style={{display:'flex',flexDirection:'column',height:'100%'}}>
-      <div ref={scrollRef} style={{display:'flex',gap:6,padding:'10px 16px',overflowX:'auto',background:'#0f172a',borderBottom:'1px solid #1e293b',flexShrink:0}}>
-        {DAYS.map(d=>(
-          <div key={d.id} className={`day-chip ${d.id===activeDay?'active':''}`} onClick={()=>setActiveDay(d.id)}>
-            <span style={{marginRight:4}}>{d.emoji}</span>D{d.id}
-          </div>
-        ))}
-      </div>
-      <div ref={contentRef} style={{flex:1,overflowY:'auto',paddingTop:8,paddingBottom:8}}>
-        {day&&<DayView day={day}/>}
-        <div style={{display:'flex',justifyContent:'center',gap:12,padding:'8px 16px 20px'}}>
-          <button disabled={activeDay<=1} onClick={()=>setActiveDay(activeDay-1)} style={{background:activeDay<=1?'#1e293b':'#334155',color:activeDay<=1?'#475569':'#f1f5f9',border:'none',borderRadius:8,padding:'10px 20px',fontSize:13,fontWeight:600,cursor:activeDay<=1?'default':'pointer'}}>← Prev</button>
-          <button disabled={activeDay>=8} onClick={()=>setActiveDay(activeDay+1)} style={{background:activeDay>=8?'#1e293b':'#f59e0b',color:activeDay>=8?'#475569':'#0f172a',border:'none',borderRadius:8,padding:'10px 20px',fontSize:13,fontWeight:600,cursor:activeDay>=8?'default':'pointer'}}>Next →</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function LocationsTab(){
-  const[search,setSearch]=useState('');
-  const[filter,setFilter]=useState('all');
-  const cats={all:'All',sg:'Singapore',melaka:'Melaka',sentosa:'Sentosa'};
-  const filtered=ALL_LOCATIONS.filter(l=>{
-    const q=l[0].toLowerCase();
-    const matchSearch=l[1].toLowerCase().includes(search.toLowerCase());
-    if(filter==='sg') return matchSearch&&!q.includes('melaka')&&!q.includes('malacca')&&!q.includes('sentosa')&&!q.includes('ubin');
-    if(filter==='melaka') return matchSearch&&(q.includes('melaka')||q.includes('malacca'));
-    if(filter==='sentosa') return matchSearch&&q.includes('sentosa');
-    return matchSearch;
-  });
-  return(
-    <div style={{padding:16,height:'100%',overflowY:'auto'}}>
-      <h2 style={{fontSize:18,fontWeight:800,marginBottom:12}}>All Locations ({ALL_LOCATIONS.length})</h2>
-      <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search locations..." style={{width:'100%',padding:'10px 14px',borderRadius:10,border:'1px solid #334155',background:'#1e293b',color:'#f1f5f9',fontSize:14,marginBottom:10,outline:'none'}}/>
-      <div style={{display:'flex',gap:6,marginBottom:14,overflowX:'auto'}}>
-        {Object.entries(cats).map(([k,v])=>(
-          <button key={k} onClick={()=>setFilter(k)} style={{padding:'4px 12px',borderRadius:999,fontSize:12,fontWeight:600,border:'none',cursor:'pointer',background:filter===k?'#f59e0b':'#1e293b',color:filter===k?'#0f172a':'#94a3b8',whiteSpace:'nowrap',flexShrink:0}}>{v}</button>
-        ))}
-      </div>
-      <div style={{display:'flex',flexDirection:'column',gap:6}}>
-        {filtered.map((l,i)=>(
-          <a key={i} href={mapsUrl(l[0])} target="_blank" rel="noopener" style={{display:'flex',justifyContent:'space-between',alignItems:'center',background:'#1e293b',borderRadius:10,padding:'12px 14px',textDecoration:'none',color:'#f1f5f9'}}>
-            <div>
-              <div style={{fontSize:14,fontWeight:600}}>{l[1]}</div>
-              <div style={{fontSize:11,color:'#94a3b8',marginTop:2}}>{l[2]}{l[3]?' · '+l[3]:''}</div>
-            </div>
-            <span style={{color:'#06b6d4',fontSize:18}}>→</span>
-          </a>
-        ))}
-        {filtered.length===0&&<p style={{color:'#64748b',textAlign:'center',padding:20}}>No locations found.</p>}
-      </div>
-    </div>
-  );
-}
-
-function QuickRefTab(){
-  const[openSec,setOpenSec]=useState(null);
-  return(
-    <div style={{padding:16,height:'100%',overflowY:'auto'}}>
-      <h2 style={{fontSize:18,fontWeight:800,marginBottom:12}}>Quick Reference</h2>
-      <div style={{display:'flex',flexDirection:'column',gap:8}}>
-        {QUICK_REF.map((sec,i)=>(
-          <div key={i} style={{background:'#1e293b',borderRadius:12,overflow:'hidden'}}>
-            <button onClick={()=>setOpenSec(openSec===i?null:i)} style={{width:'100%',display:'flex',justifyContent:'space-between',alignItems:'center',padding:'14px 16px',background:'none',border:'none',color:'#f1f5f9',cursor:'pointer',fontSize:15,fontWeight:700}}>
-              <span>{sec.icon} {sec.title}</span>
-              <span style={{transform:openSec===i?'rotate(180deg)':'rotate(0)',transition:'transform .2s',fontSize:12,color:'#94a3b8'}}>▼</span>
-            </button>
-            {openSec===i&&(
-              <div className="fade-in" style={{padding:'0 16px 14px',display:'flex',flexDirection:'column',gap:8}}>
-                {sec.items.map((item,j)=>(
-                  <div key={j} style={{background:'#0f172a',borderRadius:8,padding:'10px 12px'}}>
-                    <div style={{fontSize:13,fontWeight:600}}>{item.label}</div>
-                    <div style={{fontSize:12,color:'#94a3b8',marginTop:2,lineHeight:1.4}}>{item.detail}</div>
-                    {item.map&&<div style={{marginTop:4}}><MapLink place={item.map}>Open in Maps →</MapLink></div>}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-      <div style={{marginTop:24,background:'#1e293b',borderRadius:12,padding:16}}>
-        <h3 style={{fontSize:14,fontWeight:700,marginBottom:8}}>🔭 Binocular Schedule (Crivit 12x36)</h3>
-        <div style={{display:'flex',flexDirection:'column',gap:6}}>
-          {[
-            ["Day 2","Bird Paradise — Predators on Wings show"],
-            ["Day 6 AM","Batu Berendam — Asian Openbill storks at dawn"],
-            ["Day 7 AM","MacRitchie — canopy macaques & drongos"],
-            ["Day 7 PM","Pulau Ubin — wild hornbills & otters"]
-          ].map((b,i)=>(
-            <div key={i} className="bino-alert" style={{padding:'8px 10px',borderRadius:8,fontSize:12}}>
-              <strong>{b[0]}:</strong> {b[1]}
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
 
 function App(){
-  const[tab,setTab]=useState('itinerary');
+  const[tab,setTab]=useState('sg');
+  const[selected,setSelected]=useState(null);
+  const[search,setSearch]=useState('');
+  const tabs=[{id:'sg',label:'Singapore'},{id:'mk',label:'Melaka'},{id:'styles',label:'Styles'},{id:'tips',label:'Pro Tips'}];
+  const lists={sg:SG,mk:MK,styles:STYLES,tips:TIPS};
+  const items=(lists[tab]||[]).filter(i=>
+    i.title.toLowerCase().includes(search.toLowerCase())||
+    (i.sub||'').toLowerCase().includes(search.toLowerCase())
+  );
+
+  if(selected){
+    return(
+      <div style={{maxWidth:480,margin:'0 auto',height:'100vh',display:'flex',flexDirection:'column'}}>
+        <header style={{background:'#000',padding:'10px 16px',display:'flex',alignItems:'center',gap:10,borderBottom:'1px solid var(--card)',flexShrink:0}}>
+          <button onClick={()=>setSelected(null)} style={{background:'var(--card)',border:'none',borderRadius:8,padding:'6px 14px',color:'var(--text)',cursor:'pointer',fontSize:13,fontWeight:600}}>← Back</button>
+          <div style={{fontSize:13,fontWeight:700,flex:1,textAlign:'center',color:'var(--accent)'}}>📸 Zfc Settings</div>
+          <div style={{width:65}}/>
+        </header>
+        <div style={{flex:1,overflowY:'auto'}}><DetailView item={selected} onBack={()=>setSelected(null)}/></div>
+      </div>
+    );
+  }
+
   return(
     <div style={{maxWidth:480,margin:'0 auto',height:'100vh',display:'flex',flexDirection:'column'}}>
-      <header style={{background:'linear-gradient(135deg,#0f172a,#1e1b4b)',padding:'14px 16px 10px',textAlign:'center',borderBottom:'1px solid #1e293b',flexShrink:0}}>
-        <h1 style={{fontSize:16,fontWeight:800,letterSpacing:1}}>🇸🇬 SG & Melaka 2026 🇲🇾</h1>
-        <p style={{fontSize:11,color:'#94a3b8',marginTop:2}}>Feb 27 – Mar 6 · 8 Days · 2 Travelers</p>
+      <header style={{background:'#000',padding:'14px 16px 0',borderBottom:'1px solid var(--card)',flexShrink:0}}>
+        <div style={{textAlign:'center',marginBottom:8}}>
+          <h1 style={{fontSize:16,fontWeight:800,letterSpacing:1}}>📸 NIKON Zfc FIELD GUIDE</h1>
+          <p style={{fontSize:10,color:'var(--muted)',marginTop:2}}>Singapore & Melaka 2026 · Tap a scene → get settings</p>
+        </div>
+        <div style={{marginBottom:8}}>
+          <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search scenes..." style={{width:'100%',padding:'8px 12px',borderRadius:10,border:'1px solid var(--card2)',background:'var(--card)',color:'var(--text)',fontSize:13,outline:'none'}}/>
+        </div>
+        <div style={{display:'flex',gap:6,overflowX:'auto',paddingBottom:10}}>
+          {tabs.map(t=>(
+            <button key={t.id} className={`tab-btn ${tab===t.id?'on':'off'}`} onClick={()=>{setTab(t.id);setSearch('')}}>
+              {t.label} ({lists[t.id].length})
+            </button>
+          ))}
+        </div>
       </header>
-      <main style={{flex:1,overflow:'hidden',display:'flex',flexDirection:'column'}}>
-        {tab==='itinerary'&&<ItineraryTab/>}
-        {tab==='locations'&&<LocationsTab/>}
-        {tab==='quickref'&&<QuickRefTab/>}
-      </main>
-      <nav style={{background:'#0f172a',borderTop:'1px solid #1e293b',display:'flex',flexShrink:0,paddingBottom:'env(safe-area-inset-bottom)'}}>
-        {[
-          {id:'itinerary',label:'Itinerary',icon:'📅'},
-          {id:'locations',label:'Locations',icon:'📍'},
-          {id:'quickref',label:'Reference',icon:'📋'}
-        ].map(n=>(
-          <div key={n.id} className={`nav-btn ${tab===n.id?'active':''}`} onClick={()=>setTab(n.id)}>
-            <span style={{fontSize:20}}>{n.icon}</span>
-            <span>{n.label}</span>
-          </div>
+      <div style={{flex:1,overflowY:'auto',padding:'8px 16px 16px'}}>
+        {items.map(item=>(
+          <button key={item.id} className="item-btn" style={{marginBottom:6}} onClick={()=>setSelected(item)}>
+            <span style={{fontSize:24,flexShrink:0}}>{item.emoji}</span>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:14,fontWeight:700,lineHeight:1.2}}>{item.title}</div>
+              <div style={{fontSize:11,color:'var(--muted)',marginTop:1}}>{item.sub}</div>
+            </div>
+            <div style={{flexShrink:0,textAlign:'right'}}>
+              {item.mode&&<span className="tag" style={{background:item.mode==='A'?'#164e63':item.mode==='S'?'#7f1d1d':'#3f3f46',color:item.mode==='A'?'var(--cyan)':item.mode==='S'?'var(--red)':'var(--text)'}}>{item.mode==='A'?'APT':item.mode==='S'?'SHT':'MAN'}</span>}
+              <div style={{color:'var(--dim)',fontSize:20,marginTop:2}}>›</div>
+            </div>
+          </button>
         ))}
-      </nav>
+        {items.length===0&&<p style={{color:'var(--dim)',textAlign:'center',padding:30,fontSize:14}}>No scenes found.</p>}
+      </div>
     </div>
   );
 }
