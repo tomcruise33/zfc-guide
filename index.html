@@ -509,6 +509,251 @@ const TIPS=[
     why:"RAW files contain all the data from the sensor, letting you recover blown highlights and dark shadows in editing. For most daytime shots, JPEG Fine is excellent and saves storage."}
 ];
 
+function LearnView(){
+  const[learnTab,setLearnTab]=useState('aperture');
+  const[aperture,setAperture]=useState(3);
+  const[shutter,setShutter]=useState(3);
+  const[isoLevel,setIsoLevel]=useState(1);
+  const[quizStep,setQuizStep]=useState(0);
+  const[quizAnswer,setQuizAnswer]=useState(null);
+
+  const apertureStops=[
+    {f:'f/3.5',blur:95,label:'Maximum blur',use:'Portraits, food, bokeh',color:'#f472b6'},
+    {f:'f/4.5',blur:75,label:'Soft background',use:'People in context',color:'#e879a0'},
+    {f:'f/5.6',blur:55,label:'Moderate blur',use:'Street, general',color:'#a78bfa'},
+    {f:'f/8',blur:25,label:'Mostly sharp',use:'Architecture, landscapes',color:'#22d3ee'},
+    {f:'f/11',blur:10,label:'Everything sharp',use:'Deep scenes, sunstars',color:'#4ade80'},
+    {f:'f/16',blur:3,label:'Ultra sharp',use:'Extreme depth, tripod needed',color:'#4ade80'}
+  ];
+
+  const shutterSpeeds=[
+    {s:'1/1000s',motion:0,label:'Frozen solid',use:'Birds, sports, planes',icon:'❄️'},
+    {s:'1/500s',motion:10,label:'Freeze action',use:'Running, cycling, kids',icon:'🧊'},
+    {s:'1/250s',motion:25,label:'Slight motion',use:'Walking people, floats',icon:'🚶'},
+    {s:'1/60s',motion:50,label:'Intentional blur',use:'Panning, flowing fabric',icon:'💨'},
+    {s:'1/15s',motion:75,label:'Ghost trails',use:'Crowds, commuters',icon:'👻'},
+    {s:'2-4 sec',motion:95,label:'Silky water',use:'Night cityscape, waterfalls',icon:'🌊'}
+  ];
+
+  const isoLevels=[
+    {iso:'100',grain:0,label:'Zero grain',use:'Daylight, tripod',quality:'Perfect',color:'#4ade80'},
+    {iso:'400',grain:15,label:'Invisible grain',use:'Shade, cloudy day',quality:'Excellent',color:'#4ade80'},
+    {iso:'800',grain:25,label:'Barely visible',use:'Indoor with windows',quality:'Great',color:'#22d3ee'},
+    {iso:'1600',grain:40,label:'Slight texture',use:'Indoor markets',quality:'Good',color:'#22d3ee'},
+    {iso:'3200',grain:60,label:'Visible grain',use:'Dim bars, temples',quality:'Acceptable',color:'#eab308'},
+    {iso:'6400',grain:80,label:'Strong grain',use:'Night Safari, dark bars',quality:'Grainy but usable',color:'#f472b6'},
+    {iso:'12800',grain:95,label:'Heavy grain',use:'Emergency only',quality:'Very grainy',color:'#ef4444'}
+  ];
+
+  const quiz=[
+    {q:"You're at a hawker stall. The food looks amazing but it's dim inside. What do you do?",
+      opts:["Open aperture wide (f/3.5)","Use flash","Set f/11 for sharpness"],correct:0,
+      explain:"f/3.5 lets in the most light. Flash kills the atmosphere and is often rude. f/11 would need very high ISO."},
+    {q:"A macaque is jumping between trees. How do you freeze the action?",
+      opts:["Aperture Priority, f/8","Shutter Priority, 1/1000s","Manual, f/16, 1 sec"],correct:1,
+      explain:"Shutter Priority at 1/1000s guarantees frozen action. The camera handles aperture automatically."},
+    {q:"It's blue hour at Marina Bay. You want silky water reflections. What mode?",
+      opts:["Auto mode","Shutter Priority, 2-4 seconds on a ledge","Aperture Priority, f/3.5"],correct:1,
+      explain:"Long exposure (2-4 sec) turns water into glass. You need a stable surface and the 2-sec timer."},
+    {q:"The photo on your screen looks too dark at a night market. Quick fix?",
+      opts:["Turn the Exposure Compensation dial to +0.3 or +0.7","Switch to Manual mode","Increase aperture to f/16"],correct:0,
+      explain:"The +/- dial is the fastest brightness fix. Turning it up (+) brightens the image instantly."},
+    {q:"You want to photograph a stranger at the kopitiam. Best approach?",
+      opts:["Zoom to 250mm and snipe from far away","Smile, gesture, zoom to 50mm, shoot, show them the photo","Use 16mm from 20cm away"],correct:1,
+      explain:"50mm is flattering for portraits. Asking permission gets better expressions. Showing the photo builds trust."},
+    {q:"Your lens fogs up coming out of an MRT station. What happened?",
+      opts:["The lens is broken","Cold AC air hitting hot humid outdoor air caused condensation","The sensor is damaged"],correct:1,
+      explain:"Put the camera in your bag for 10 minutes to acclimatize. Swap lenses in AC, not outside!"}
+  ];
+
+  const currentQ=quiz[quizStep]||quiz[0];
+
+  const learnTabs=[
+    {id:'aperture',label:'📷 Aperture'},
+    {id:'shutter',label:'⏱️ Shutter'},
+    {id:'iso',label:'🔆 ISO'},
+    {id:'decide',label:'🧭 Helper'},
+    {id:'quiz',label:'🧠 Quiz'}
+  ];
+
+  const Bar=({pct,color,h})=><div style={{width:'100%',background:'#27272a',borderRadius:6,height:h||8,overflow:'hidden'}}>
+    <div style={{width:`${pct}%`,background:color||'var(--accent)',height:'100%',borderRadius:6,transition:'width .4s ease'}}/>
+  </div>;
+
+  return(
+    <div className="fade" style={{padding:16}}>
+      <div style={{display:'flex',gap:6,overflowX:'auto',marginBottom:16,paddingBottom:4}}>
+        {learnTabs.map(t=>(
+          <button key={t.id} onClick={()=>setLearnTab(t.id)} style={{
+            padding:'6px 10px',borderRadius:10,fontSize:11,fontWeight:600,border:'none',cursor:'pointer',whiteSpace:'nowrap',flexShrink:0,
+            background:learnTab===t.id?'var(--card2)':'transparent',
+            color:learnTab===t.id?'var(--accent)':'var(--dim)',
+            borderWidth:1,borderStyle:'solid',borderColor:learnTab===t.id?'var(--card3)':'transparent'
+          }}>{t.label}</button>
+        ))}
+      </div>
+
+      {learnTab==='aperture'&&(
+        <div>
+          <h3 style={{fontSize:18,fontWeight:800,marginBottom:4}}>Aperture = Blur Control</h3>
+          <p style={{fontSize:12,color:'var(--muted)',marginBottom:16}}>Drag the slider to see how aperture affects background blur.</p>
+          <div style={{background:'#000',borderRadius:16,padding:20,marginBottom:16,textAlign:'center',border:'1px solid var(--card3)'}}>
+            <div style={{fontSize:48,fontWeight:900,fontFamily:'Courier New',color:apertureStops[aperture].color,letterSpacing:2}}>
+              {apertureStops[aperture].f}
+            </div>
+            <div style={{fontSize:13,color:'var(--muted)',marginTop:4}}>{apertureStops[aperture].label}</div>
+          </div>
+          <input type="range" min={0} max={5} value={aperture} onChange={e=>setAperture(+e.target.value)}
+            style={{width:'100%',accentColor:'var(--accent)',marginBottom:12}}/>
+          <div style={{display:'flex',justifyContent:'space-between',fontSize:10,color:'var(--dim)',marginBottom:16}}>
+            <span>f/3.5 (Max blur)</span><span>f/16 (Max sharp)</span>
+          </div>
+          <div style={{background:'var(--card)',borderRadius:12,padding:12,marginBottom:12}}>
+            <div style={{fontSize:10,fontWeight:700,color:'var(--dim)',letterSpacing:1,marginBottom:6}}>BACKGROUND BLUR</div>
+            <Bar pct={apertureStops[aperture].blur} color={apertureStops[aperture].color} h={12}/>
+            <div style={{fontSize:11,color:'var(--muted)',marginTop:6}}>Best for: <strong style={{color:'var(--text)'}}>{apertureStops[aperture].use}</strong></div>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
+            <div style={{background:'rgba(244,114,182,.1)',border:'1px solid rgba(244,114,182,.2)',borderRadius:10,padding:10}}>
+              <div style={{fontSize:11,fontWeight:700,color:'#f472b6',marginBottom:2}}>Low f-number</div>
+              <div style={{fontSize:10,color:'var(--muted)'}}>More light in, blurry background, good for portraits & dark scenes</div>
+            </div>
+            <div style={{background:'rgba(34,211,238,.1)',border:'1px solid rgba(34,211,238,.2)',borderRadius:10,padding:10}}>
+              <div style={{fontSize:11,fontWeight:700,color:'#22d3ee',marginBottom:2}}>High f-number</div>
+              <div style={{fontSize:10,color:'var(--muted)'}}>Less light in, everything sharp, good for landscapes & buildings</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {learnTab==='shutter'&&(
+        <div>
+          <h3 style={{fontSize:18,fontWeight:800,marginBottom:4}}>Shutter Speed = Motion Control</h3>
+          <p style={{fontSize:12,color:'var(--muted)',marginBottom:16}}>Drag to see how shutter speed affects moving subjects.</p>
+          <div style={{background:'#000',borderRadius:16,padding:20,marginBottom:16,textAlign:'center',border:'1px solid var(--card3)'}}>
+            <div style={{fontSize:36,marginBottom:4}}>{shutterSpeeds[shutter].icon}</div>
+            <div style={{fontSize:36,fontWeight:900,fontFamily:'Courier New',color:'var(--red)',letterSpacing:2}}>
+              {shutterSpeeds[shutter].s}
+            </div>
+            <div style={{fontSize:13,color:'var(--muted)',marginTop:4}}>{shutterSpeeds[shutter].label}</div>
+          </div>
+          <input type="range" min={0} max={5} value={shutter} onChange={e=>setShutter(+e.target.value)}
+            style={{width:'100%',accentColor:'#ef4444',marginBottom:12}}/>
+          <div style={{display:'flex',justifyContent:'space-between',fontSize:10,color:'var(--dim)',marginBottom:16}}>
+            <span>1/1000s (Freeze)</span><span>4 sec (Silky)</span>
+          </div>
+          <div style={{background:'var(--card)',borderRadius:12,padding:12,marginBottom:12}}>
+            <div style={{fontSize:10,fontWeight:700,color:'var(--dim)',letterSpacing:1,marginBottom:6}}>MOTION BLUR AMOUNT</div>
+            <Bar pct={shutterSpeeds[shutter].motion} color='#ef4444' h={12}/>
+            <div style={{fontSize:11,color:'var(--muted)',marginTop:6}}>Best for: <strong style={{color:'var(--text)'}}>{shutterSpeeds[shutter].use}</strong></div>
+          </div>
+          <div className="tip-card">
+            <div style={{fontSize:10,fontWeight:700,color:'var(--accent)',marginBottom:4}}>💡 RULE OF THUMB</div>
+            <p style={{fontSize:12,color:'#fef3c7'}}>Handheld minimum: 1/focal length. At 50mm, use at least 1/50s. At 250mm, use at least 1/250s. Slower = you need a surface or tripod.</p>
+          </div>
+        </div>
+      )}
+
+      {learnTab==='iso'&&(
+        <div>
+          <h3 style={{fontSize:18,fontWeight:800,marginBottom:4}}>ISO = Light Sensitivity (Grain)</h3>
+          <p style={{fontSize:12,color:'var(--muted)',marginBottom:16}}>Higher ISO = brighter but grainier. Drag to explore.</p>
+          <div style={{background:'#000',borderRadius:16,padding:20,marginBottom:16,textAlign:'center',border:'1px solid var(--card3)'}}>
+            <div style={{fontSize:11,color:'var(--dim)',fontWeight:700,letterSpacing:2,marginBottom:4}}>ISO</div>
+            <div style={{fontSize:48,fontWeight:900,fontFamily:'Courier New',color:isoLevels[isoLevel].color,letterSpacing:2}}>
+              {isoLevels[isoLevel].iso}
+            </div>
+            <div style={{fontSize:13,color:'var(--muted)',marginTop:4}}>{isoLevels[isoLevel].quality}</div>
+          </div>
+          <input type="range" min={0} max={6} value={isoLevel} onChange={e=>setIsoLevel(+e.target.value)}
+            style={{width:'100%',accentColor:isoLevels[isoLevel].color,marginBottom:12}}/>
+          <div style={{display:'flex',justifyContent:'space-between',fontSize:10,color:'var(--dim)',marginBottom:16}}>
+            <span>ISO 100 (Clean)</span><span>ISO 12800 (Grainy)</span>
+          </div>
+          <div style={{background:'var(--card)',borderRadius:12,padding:12,marginBottom:12}}>
+            <div style={{fontSize:10,fontWeight:700,color:'var(--dim)',letterSpacing:1,marginBottom:6}}>GRAIN / NOISE LEVEL</div>
+            <Bar pct={isoLevels[isoLevel].grain} color={isoLevels[isoLevel].color} h={12}/>
+            <div style={{fontSize:11,color:'var(--muted)',marginTop:6}}>Typical use: <strong style={{color:'var(--text)'}}>{isoLevels[isoLevel].use}</strong></div>
+          </div>
+          <div className="tip-card">
+            <div style={{fontSize:10,fontWeight:700,color:'var(--accent)',marginBottom:4}}>💡 ZFC DEFAULT SETUP</div>
+            <p style={{fontSize:12,color:'#fef3c7'}}>Set the ISO dial to 100 and turn ON Auto-ISO (max 6400). The camera chooses the lowest possible ISO automatically. You only need to set ISO manually for long exposures (night cityscapes).</p>
+          </div>
+        </div>
+      )}
+
+      {learnTab==='decide'&&(
+        <div>
+          <h3 style={{fontSize:18,fontWeight:800,marginBottom:4}}>What Should I Set?</h3>
+          <p style={{fontSize:12,color:'var(--muted)',marginBottom:16}}>Quick decision guide based on what you're shooting.</p>
+          {[
+            {emoji:'🍜',scene:'Food on a table',mode:'A',setting:'f/3.5',extra:'Get close, window light, Vivid',color:'#f472b6'},
+            {emoji:'🏛️',scene:'Building / Temple',mode:'A',setting:'f/8',extra:'Step back, include foreground',color:'#22d3ee'},
+            {emoji:'🦅',scene:'Bird / Animal moving',mode:'S',setting:'1/1000s',extra:'Burst mode ON, track subject',color:'#ef4444'},
+            {emoji:'🌃',scene:'Night cityscape',mode:'S',setting:'2-4 sec',extra:'Camera on ledge, timer 2s, ISO 100',color:'#a78bfa'},
+            {emoji:'🚶',scene:'Person walking past',mode:'A',setting:'f/5.6',extra:'Touch shutter, hip-shoot',color:'#eab308'},
+            {emoji:'🌅',scene:'Sunset silhouette',mode:'A',setting:'f/8, -1.0 EV',extra:'Point at sky, lock exposure, recompose',color:'#f97316'},
+            {emoji:'🔥',scene:'Smoke / Steam / Dust',mode:'S',setting:'1/50s',extra:'Backlight it, slight blur = atmosphere',color:'#f472b6'},
+            {emoji:'🏃',scene:'Fast action / Sports',mode:'S',setting:'1/500s+',extra:'Burst mode, subject tracking AF',color:'#ef4444'},
+            {emoji:'👤',scene:'Portrait of a person',mode:'A',setting:'f/3.5 at 50mm',extra:'Face/Eye AF, background far away',color:'#f472b6'},
+            {emoji:'🌧️',scene:'Rain / Wet streets',mode:'S',setting:'1/500s',extra:'Protect camera! Shoot reflections',color:'#22d3ee'}
+          ].map((s,i)=>(
+            <div key={i} style={{background:'var(--card)',borderRadius:12,padding:12,marginBottom:8,borderLeft:`3px solid ${s.color}`}}>
+              <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:4}}>
+                <span style={{fontSize:20}}>{s.emoji}</span>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:13,fontWeight:700}}>{s.scene}</div>
+                </div>
+                <div style={{background:'#000',borderRadius:6,padding:'3px 8px'}}>
+                  <span style={{fontSize:10,fontWeight:700,color:s.mode==='A'?'#22d3ee':'#ef4444'}}>{s.mode}</span>
+                </div>
+              </div>
+              <div style={{display:'flex',gap:8,alignItems:'center'}}>
+                <span style={{fontSize:16,fontWeight:900,fontFamily:'Courier New',color:s.color}}>{s.setting}</span>
+                <span style={{fontSize:10,color:'var(--muted)',flex:1}}>{s.extra}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {learnTab==='quiz'&&(
+        <div>
+          <h3 style={{fontSize:18,fontWeight:800,marginBottom:4}}>Test Your Knowledge</h3>
+          <p style={{fontSize:12,color:'var(--muted)',marginBottom:16}}>Question {quizStep+1} of {quiz.length}</p>
+          <Bar pct={((quizStep+1)/quiz.length)*100} color='var(--accent)' h={4}/>
+          <div style={{background:'var(--card)',borderRadius:14,padding:16,marginTop:16,marginBottom:16,border:'1px solid var(--card3)'}}>
+            <p style={{fontSize:14,fontWeight:600,lineHeight:1.5}}>{currentQ.q}</p>
+          </div>
+          {currentQ.opts.map((opt,i)=>(
+            <button key={i} onClick={()=>setQuizAnswer(i)} style={{
+              display:'block',width:'100%',textAlign:'left',padding:'12px 14px',marginBottom:8,borderRadius:12,cursor:'pointer',
+              fontSize:13,fontWeight:500,border:'1px solid',transition:'all .2s',
+              background:quizAnswer===null?'var(--card)':i===currentQ.correct?'rgba(74,222,128,.15)':quizAnswer===i?'rgba(239,68,68,.15)':'var(--card)',
+              borderColor:quizAnswer===null?'var(--card3)':i===currentQ.correct?'#4ade80':quizAnswer===i?'#ef4444':'var(--card3)',
+              color:quizAnswer===null?'var(--text)':i===currentQ.correct?'#4ade80':quizAnswer===i?'#ef4444':'var(--muted)'
+            }}>{opt} {quizAnswer!==null&&i===currentQ.correct&&' ✓'}{quizAnswer!==null&&quizAnswer===i&&i!==currentQ.correct&&' ✗'}</button>
+          ))}
+          {quizAnswer!==null&&(
+            <div style={{marginTop:12}}>
+              <div className="why-card">
+                <div style={{fontSize:10,fontWeight:700,color:quizAnswer===currentQ.correct?'#4ade80':'#ef4444',letterSpacing:1,marginBottom:4}}>
+                  {quizAnswer===currentQ.correct?'✓ CORRECT!':'✗ NOT QUITE'}
+                </div>
+                <p style={{fontSize:12,lineHeight:1.5,color:'#d4d4d8'}}>{currentQ.explain}</p>
+              </div>
+              <button onClick={()=>{setQuizStep(s=>(s+1)%quiz.length);setQuizAnswer(null)}} style={{
+                display:'block',width:'100%',padding:'12px',marginTop:12,borderRadius:12,border:'none',cursor:'pointer',
+                background:'var(--accent)',color:'#000',fontSize:14,fontWeight:700
+              }}>{quizStep<quiz.length-1?'Next Question →':'Restart Quiz 🔄'}</button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function DetailView({item,onBack}){
   const hasSettings=!!item.mode;
   return(
@@ -562,9 +807,9 @@ function App(){
   const[tab,setTab]=useState('sg');
   const[selected,setSelected]=useState(null);
   const[search,setSearch]=useState('');
-  const tabs=[{id:'sg',label:'Singapore'},{id:'mk',label:'Melaka'},{id:'styles',label:'Styles'},{id:'tips',label:'Pro Tips'}];
+  const tabs=[{id:'sg',label:'Singapore'},{id:'mk',label:'Melaka'},{id:'styles',label:'Styles'},{id:'tips',label:'Pro Tips'},{id:'learn',label:'📚 Learn'}];
   const lists={sg:SG,mk:MK,styles:STYLES,tips:TIPS};
-  const items=(lists[tab]||[]).filter(i=>
+  const items=tab==='learn'?[]:(lists[tab]||[]).filter(i=>
     i.title.toLowerCase().includes(search.toLowerCase())||
     (i.sub||'').toLowerCase().includes(search.toLowerCase())
   );
@@ -589,19 +834,20 @@ function App(){
           <h1 style={{fontSize:16,fontWeight:800,letterSpacing:1}}>📸 NIKON Zfc FIELD GUIDE</h1>
           <p style={{fontSize:10,color:'var(--muted)',marginTop:2}}>Singapore & Melaka 2026 · Tap a scene → get settings</p>
         </div>
-        <div style={{marginBottom:8}}>
+        {tab!=='learn'&&<div style={{marginBottom:8}}>
           <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search scenes..." style={{width:'100%',padding:'8px 12px',borderRadius:10,border:'1px solid var(--card2)',background:'var(--card)',color:'var(--text)',fontSize:13,outline:'none'}}/>
-        </div>
+        </div>}
         <div style={{display:'flex',gap:6,overflowX:'auto',paddingBottom:10}}>
           {tabs.map(t=>(
             <button key={t.id} className={`tab-btn ${tab===t.id?'on':'off'}`} onClick={()=>{setTab(t.id);setSearch('')}}>
-              {t.label} ({lists[t.id].length})
+              {t.label}{lists[t.id]?` (${lists[t.id].length})`:''}
             </button>
           ))}
         </div>
       </header>
       <div style={{flex:1,overflowY:'auto',padding:'8px 16px 16px'}}>
-        {items.map(item=>(
+        {tab==='learn'&&<LearnView/>}
+        {tab!=='learn'&&items.map(item=>(
           <button key={item.id} className="item-btn" style={{marginBottom:6}} onClick={()=>setSelected(item)}>
             <span style={{fontSize:24,flexShrink:0}}>{item.emoji}</span>
             <div style={{flex:1,minWidth:0}}>
@@ -614,7 +860,7 @@ function App(){
             </div>
           </button>
         ))}
-        {items.length===0&&<p style={{color:'var(--dim)',textAlign:'center',padding:30,fontSize:14}}>No scenes found.</p>}
+        {tab!=='learn'&&items.length===0&&<p style={{color:'var(--dim)',textAlign:'center',padding:30,fontSize:14}}>No scenes found.</p>}
       </div>
     </div>
   );
