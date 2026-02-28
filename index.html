@@ -31,8 +31,6 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .tip-card{background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.2);border-radius:14px;padding:14px}
 .why-card{background:rgba(255,255,255,.03);border:1px solid var(--card3);border-radius:14px;padding:14px}
 </style>
-<link rel="manifest" href="./manifest.json">
-<script>if("serviceWorker"in navigator){navigator.serviceWorker.register("./sw.js")}</script>
 </head>
 <body>
 <div id="root"></div>
@@ -512,7 +510,7 @@ const TIPS=[
 ];
 
 function LearnView(){
-  const[learnTab,setLearnTab]=useState('aperture');
+  const[learnTab,setLearnTab]=useState('start');
   const[aperture,setAperture]=useState(3);
   const[shutter,setShutter]=useState(3);
   const[isoLevel,setIsoLevel]=useState(1);
@@ -565,15 +563,36 @@ function LearnView(){
       explain:"50mm is flattering for portraits. Asking permission gets better expressions. Showing the photo builds trust."},
     {q:"Your lens fogs up coming out of an MRT station. What happened?",
       opts:["The lens is broken","Cold AC air hitting hot humid outdoor air caused condensation","The sensor is damaged"],correct:1,
-      explain:"Put the camera in your bag for 10 minutes to acclimatize. Swap lenses in AC, not outside!"}
+      explain:"Put the camera in your bag for 10 minutes to acclimatize. Swap lenses in AC, not outside!"},
+    {q:"You just unboxed your Zfc and want to start shooting. What mode?",
+      opts:["M (Manual) — full control from day one","A (Aperture Priority) — you set blur, camera handles the rest","Keep it on Auto forever"],correct:1,
+      explain:"A mode is the best starting point. You control background blur, the camera handles shutter speed. Auto works but gives you zero creative control."},
+    {q:"Night market photos have an ugly orange glow. What's the fastest fix?",
+      opts:["Increase ISO to maximum","Change White Balance to Incandescent or Sodium Vapor","Switch to Manual mode and guess"],correct:1,
+      explain:"The orange comes from sodium/LED street lights. Changing WB to Incandescent corrects the color cast. Even better: shoot RAW so you can fix it later."},
+    {q:"Your photo of Marina Bay Sands is completely white in the sky. Why?",
+      opts:["Your camera is broken","The sky is overexposed — you need negative exposure compensation","You need a bigger lens"],correct:1,
+      explain:"Turn the +/- dial to about -0.7. This darkens the exposure so the sky keeps its color. You can also try Highlight-weighted metering for night scenes."},
+    {q:"A trishaw rider zooms past and your photo is a blurry mess. Fix?",
+      opts:["Switch to S mode and set 1/500s or faster","Use a smaller aperture like f/16","Turn off autofocus"],correct:0,
+      explain:"S mode lets you lock a fast shutter speed. 1/500s freezes most human-speed motion. The camera picks the right aperture automatically."},
+    {q:"Your camera won't focus — it just hunts back and forth. What to check first?",
+      opts:["The lens AF/MF switch might be on MF","The battery is low","The SD card is full"],correct:0,
+      explain:"The physical AF/MF switch on the lens barrel is the #1 cause. Also: you might be too close (min focus ~25cm) or pointing at a plain wall with no contrast."},
+    {q:"What does the +/- exposure compensation dial actually do?",
+      opts:["Changes the aperture","Changes the zoom","Makes the overall photo brighter (+) or darker (-)"],correct:2,
+      explain:"It's your brightness fine-tune button. +0.7 brightens, -0.7 darkens. Works in A and S modes. It's the most useful control after the mode dial."}
   ];
 
   const currentQ=quiz[quizStep]||quiz[0];
 
   const learnTabs=[
+    {id:'start',label:'🟢 Start Here'},
+    {id:'modes',label:'🎛️ Modes'},
     {id:'aperture',label:'📷 Aperture'},
     {id:'shutter',label:'⏱️ Shutter'},
     {id:'iso',label:'🔆 ISO'},
+    {id:'fixit',label:'🔧 Fix It'},
     {id:'decide',label:'🧭 Helper'},
     {id:'quiz',label:'🧠 Quiz'}
   ];
@@ -594,6 +613,122 @@ function LearnView(){
           }}>{t.label}</button>
         ))}
       </div>
+
+      {learnTab==='start'&&(
+        <div>
+          <h3 style={{fontSize:18,fontWeight:800,marginBottom:4}}>Welcome to Your Zfc!</h3>
+          <p style={{fontSize:12,color:'var(--muted)',marginBottom:16}}>Do these 5 things before your first real shoot. Takes 2 minutes.</p>
+
+          {[
+            {step:1,title:'Set the Mode Dial to A',desc:'Look at the top-left dial on your camera. It has numbers (1, 2, 4, 8…) and a letter A. Turn it so the orange/white line points to A. This is Aperture Priority — the easiest mode for beginners.',icon:'🎛️',color:'#22d3ee'},
+            {step:2,title:'Set ISO Dial to 100 + Turn On Auto-ISO',desc:'The right dial on top has ISO numbers. Set it to 100. Then go to Menu → ISO Sensitivity → Auto ISO ON, Max 6400. Now the camera picks the best ISO for you!',icon:'🔆',color:'#4ade80'},
+            {step:3,title:'Set AF to Auto Area',desc:'Press the i button on the back, find AF-Area Mode, choose Auto-Area AF. The camera will find and focus on whatever is important — faces, eyes, animals. You don\'t need to move the focus point.',icon:'🎯',color:'#a78bfa'},
+            {step:4,title:'Turn On the Grid',desc:'Menu → Custom Setting → d7 → Grid Display → On. This puts lines on your screen to help you compose straight, balanced photos. Line up horizons with the horizontal line.',icon:'📐',color:'#eab308'},
+            {step:5,title:'Flip the Screen Out',desc:'Your Zfc has a flip screen! Pull it out and tilt it. Shoot from waist height (looks more cinematic), above crowds, or flip it forward for selfies. This is your secret weapon.',icon:'📱',color:'#f472b6'}
+          ].map(s=>(
+            <div key={s.step} style={{background:'var(--card)',borderRadius:14,padding:14,marginBottom:10,borderLeft:`3px solid ${s.color}`}}>
+              <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:6}}>
+                <div style={{width:28,height:28,borderRadius:8,background:s.color+'22',display:'flex',alignItems:'center',justifyContent:'center',fontSize:14,fontWeight:900,color:s.color,flexShrink:0}}>{s.step}</div>
+                <div style={{fontSize:14,fontWeight:700}}>{s.icon} {s.title}</div>
+              </div>
+              <p style={{fontSize:12,lineHeight:1.6,color:'#d4d4d8',paddingLeft:38}}>{s.desc}</p>
+            </div>
+          ))}
+
+          <div className="tip-card" style={{marginTop:8}}>
+            <div style={{fontSize:10,fontWeight:700,color:'var(--accent)',marginBottom:4}}>💡 THAT'S IT — YOU'RE READY</div>
+            <p style={{fontSize:12,color:'#fef3c7',lineHeight:1.5}}>With these settings, just point and shoot. The camera handles 80% of the decisions. When you want more control, explore the Modes and other tabs.</p>
+          </div>
+
+          <div style={{marginTop:16,background:'#000',borderRadius:14,padding:16,border:'1px solid var(--card3)'}}>
+            <div style={{fontSize:11,fontWeight:700,color:'var(--dim)',letterSpacing:1,marginBottom:10}}>YOUR ZFC BUTTONS — QUICK REFERENCE</div>
+            {[
+              {btn:'Shutter Button',where:'Top right',does:'Half-press = focus. Full press = take photo.',color:'#ef4444'},
+              {btn:'Command Dial',where:'Back, top-right thumb wheel',does:'Scrolls through menus. In A mode: changes aperture.',color:'#22d3ee'},
+              {btn:'Exposure ± Dial',where:'Top, behind shutter',does:'Turn right = brighter. Turn left = darker. Your brightness fine-tune.',color:'#eab308'},
+              {btn:'i Button',where:'Back, near thumb',does:'Opens quick settings. Change AF, white balance, Picture Control, etc.',color:'#a78bfa'},
+              {btn:'Playback ▶',where:'Back, bottom-left',does:'Review your photos. Pinch to zoom. Swipe to browse.',color:'#4ade80'},
+              {btn:'Delete 🗑',where:'Back, top-left',does:'Delete current photo. Press once, then confirm.',color:'#ef4444'},
+              {btn:'Video Record',where:'Top, red dot',does:'Start/stop video. Works in any mode.',color:'#f472b6'},
+              {btn:'Fn1 / Fn2',where:'Front + back',does:'Customizable! Set to White Balance, ISO, or anything you use often.',color:'#f97316'}
+            ].map((b,i)=>(
+              <div key={i} style={{display:'flex',gap:10,marginBottom:10,alignItems:'flex-start'}}>
+                <div style={{width:6,height:6,borderRadius:3,background:b.color,marginTop:6,flexShrink:0}}/>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:12,fontWeight:700}}>{b.btn} <span style={{fontSize:10,color:'var(--dim)',fontWeight:400}}>— {b.where}</span></div>
+                  <div style={{fontSize:11,color:'var(--muted)',lineHeight:1.4}}>{b.does}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {learnTab==='modes'&&(
+        <div>
+          <h3 style={{fontSize:18,fontWeight:800,marginBottom:4}}>Which Mode Should I Use?</h3>
+          <p style={{fontSize:12,color:'var(--muted)',marginBottom:16}}>The Zfc has physical dials on top. Here's what each mode does and when to use it.</p>
+
+          {[
+            {mode:'AUTO',dial:'Green icon on mode dial',color:'#4ade80',level:'Total beginner',
+              what:'Camera decides EVERYTHING — aperture, shutter, ISO, flash.',
+              when:'You just want to point and shoot with zero thinking.',
+              limits:'You can\'t control blur, motion, or brightness. Flash may pop up indoors (looks harsh).',
+              verdict:'Good for your first day. Move to A mode as soon as you\'re comfortable.'},
+            {mode:'A — Aperture Priority',dial:'Set shutter dial to A',color:'#22d3ee',level:'Best everyday mode',
+              what:'YOU choose aperture (blur amount). Camera picks shutter speed automatically.',
+              when:'90% of situations: food, portraits, streets, temples, buildings, travel.',
+              limits:'Can\'t control motion blur directly. For action, switch to S.',
+              verdict:'This is your home base. Most pros shoot 70% of their work in A mode.'},
+            {mode:'S — Shutter Priority',dial:'Set aperture ring to A, set shutter dial to a speed',color:'#ef4444',level:'Moving subjects',
+              what:'YOU choose shutter speed (freeze or blur motion). Camera picks aperture.',
+              when:'Birds, running kids, sports, panning cars, waterfalls, light trails.',
+              limits:'If you pick a very fast speed in dim light, the camera may not have enough light → dark photo.',
+              verdict:'Switch here when something is moving and A mode gives you blur.'},
+            {mode:'M — Manual',dial:'Set both aperture ring AND shutter dial to specific values',color:'#a78bfa',level:'Advanced / Night',
+              what:'YOU choose everything. Full creative control.',
+              when:'Night cityscapes on a tripod, studio lighting, star trails, when you know exactly what you want.',
+              limits:'If you set it wrong, photos will be too dark or too bright. No safety net.',
+              verdict:'Learn A and S first. Come back to M when you understand the exposure triangle.'}
+          ].map((m,i)=>(
+            <div key={i} style={{background:'var(--card)',borderRadius:14,padding:14,marginBottom:12,border:`1px solid ${m.color}33`}}>
+              <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:8}}>
+                <div style={{background:m.color+'22',color:m.color,padding:'4px 12px',borderRadius:8,fontSize:16,fontWeight:900,fontFamily:'Courier New',letterSpacing:2}}>{m.mode}</div>
+                <span className="tag" style={{background:m.color+'22',color:m.color}}>{m.level}</span>
+              </div>
+              <div style={{fontSize:10,color:'var(--dim)',marginBottom:8}}>Dial: {m.dial}</div>
+              {[
+                {label:'What it does',text:m.what,icon:'⚙️'},
+                {label:'Use when',text:m.when,icon:'✅'},
+                {label:'Limitations',text:m.limits,icon:'⚠️'},
+              ].map((r,j)=>(
+                <div key={j} style={{marginBottom:6}}>
+                  <div style={{fontSize:10,fontWeight:700,color:'var(--dim)',letterSpacing:.5}}>{r.icon} {r.label.toUpperCase()}</div>
+                  <p style={{fontSize:12,lineHeight:1.5,color:'#d4d4d8'}}>{r.text}</p>
+                </div>
+              ))}
+              <div style={{background:m.color+'11',borderRadius:8,padding:'8px 10px',marginTop:4}}>
+                <div style={{fontSize:11,fontWeight:700,color:m.color}}>Bottom line: <span style={{fontWeight:400,color:'#d4d4d8'}}>{m.verdict}</span></div>
+              </div>
+            </div>
+          ))}
+
+          <div style={{background:'#000',borderRadius:14,padding:16,border:'1px solid var(--accent)',marginTop:4}}>
+            <div style={{fontSize:11,fontWeight:700,color:'var(--accent)',letterSpacing:1,marginBottom:10}}>⚡ QUICK DECISION FLOWCHART</div>
+            {[
+              {q:'Is anything moving fast?',yes:'→ Use S mode (1/500s+)',no:'↓'},
+              {q:'Do you want blurry background?',yes:'→ Use A mode (f/3.5)',no:'↓'},
+              {q:'Is it a night tripod shot?',yes:'→ Use M mode',no:'↓'},
+              {q:'Not sure / just exploring?',yes:'→ Use A mode at f/5.6',no:''},
+            ].map((f,i)=>(
+              <div key={i} style={{display:'flex',gap:8,marginBottom:i<3?10:0,alignItems:'flex-start'}}>
+                <div style={{fontSize:11,fontWeight:600,color:'var(--text)',minWidth:0,flex:1}}>{f.q}</div>
+                <div style={{fontSize:11,color:'#4ade80',fontWeight:700,flexShrink:0,width:130,textAlign:'right'}}>{f.yes}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {learnTab==='aperture'&&(
         <div>
@@ -681,6 +816,106 @@ function LearnView(){
             <div style={{fontSize:10,fontWeight:700,color:'var(--accent)',marginBottom:4}}>💡 ZFC DEFAULT SETUP</div>
             <p style={{fontSize:12,color:'#fef3c7'}}>Set the ISO dial to 100 and turn ON Auto-ISO (max 6400). The camera chooses the lowest possible ISO automatically. You only need to set ISO manually for long exposures (night cityscapes).</p>
           </div>
+        </div>
+      )}
+
+      {learnTab==='fixit'&&(
+        <div>
+          <h3 style={{fontSize:18,fontWeight:800,marginBottom:4}}>Fix Common Problems</h3>
+          <p style={{fontSize:12,color:'var(--muted)',marginBottom:16}}>Something looks wrong? Find your problem below.</p>
+
+          {[
+            {problem:'Photo is too dark',emoji:'🌑',color:'#a78bfa',
+              causes:['Shooting in shade or indoors','Backlit subject (sun behind them)','Exposure compensation set to minus'],
+              fixes:[
+                {fix:'Turn the +/- dial to +0.7 or +1.0',why:'This tells the camera "make it brighter". The +/- dial is behind the shutter button on top.'},
+                {fix:'Raise ISO manually (try 1600-3200)',why:'Higher ISO = more sensitivity to light. Some grain is better than a black photo.'},
+                {fix:'Open aperture wider (lower f-number)',why:'f/3.5 lets in the most light. Turn the command dial on the back.'},
+                {fix:'For backlit subjects: use spot metering on the face',why:'Menu → Metering → Spot. This tells the camera to expose for the face, not the bright sky.'}
+              ]},
+            {problem:'Photo is too bright / blown out',emoji:'☀️',color:'#eab308',
+              causes:['Strong sunlight','Shooting white buildings or sand','Street lights at night causing overexposure','Exposure compensation set to plus'],
+              fixes:[
+                {fix:'Turn the +/- dial to -0.3 or -0.7',why:'Negative exposure compensation darkens the image. Start with -0.3 and adjust.'},
+                {fix:'For night street lights: use Spot Metering',why:'Matrix metering sees the dark sky and overexposes. Spot metering reads only the center.'},
+                {fix:'Shoot away from direct light sources',why:'Don\'t point directly at the sun or lamp. Angle slightly so the light comes from the side.'},
+                {fix:'Use Highlight-weighted metering at night',why:'Menu → Metering → Highlight-weighted. The camera protects bright areas from blowing out.'}
+              ]},
+            {problem:'Photo is blurry',emoji:'💫',color:'#ef4444',
+              causes:['Shutter speed too slow (camera shake)','Subject moved','Focus missed the subject'],
+              fixes:[
+                {fix:'Check your shutter speed — must be at least 1/focal length',why:'At 50mm, you need at least 1/50s handheld. At 250mm, at least 1/250s. Slower = blurry.'},
+                {fix:'For moving subjects: switch to S mode, set 1/500s+',why:'S mode lets you lock a fast shutter speed. The camera handles the rest.'},
+                {fix:'Turn on VR (Vibration Reduction) on your lens',why:'The switch on the lens barrel. VR compensates for hand shake and gives you ~3 stops of stability.'},
+                {fix:'Use Eye-Detection AF',why:'Menu → AF → Auto-area AF → Face/Eye detection ON. Camera locks onto eyes automatically.'}
+              ]},
+            {problem:'Night photos have ugly orange glow',emoji:'🟠',color:'#f97316',
+              causes:['Street lights are sodium/LED — camera white balance reads them wrong','Auto White Balance struggles with mixed artificial light'],
+              fixes:[
+                {fix:'Set White Balance to "Sodium Vapor" or "Incandescent"',why:'Press i → White Balance → scroll to the bulb icon or Sodium Vapor. This corrects the orange cast.'},
+                {fix:'Shoot in RAW (not JPEG)',why:'Menu → Image Quality → RAW. You can fix white balance perfectly later on your phone/computer. JPEG locks it in.'},
+                {fix:'Use the +/- dial to slightly underexpose (-0.3)',why:'Slightly dark night photos look more natural than overexposed glowy ones.'},
+                {fix:'Try "Natural Light Auto" white balance',why:'Press i → WB → Natural Light Auto. Better than regular Auto for artificial light sources.'}
+              ]},
+            {problem:'Lens fogged up',emoji:'💧',color:'#22d3ee',
+              causes:['You walked from cold AC into hot humid air (very common in Singapore/Melaka)','Condensation on front and rear elements'],
+              fixes:[
+                {fix:'Put camera in your bag for 10 minutes',why:'Let it acclimatize slowly. Wiping it just smears the moisture and risks scratching coatings.'},
+                {fix:'NEVER change lenses in humid air',why:'Condensation can form on the sensor. Swap lenses while still in AC.'},
+                {fix:'Carry a silica gel packet in your bag',why:'Absorbs moisture. Grab one from a shoe box or buy a pack cheap.'},
+                {fix:'Preventive: put camera in ziplock before leaving AC',why:'The condensation forms on the bag instead of the lens. Remove bag once equalized.'}
+              ]},
+            {problem:'Colors look wrong / weird tint',emoji:'🎨',color:'#f472b6',
+              causes:['White balance doesn\'t match the light source','Mixed lighting (daylight + fluorescent)','Picture Control is set to Monochrome or a weird filter'],
+              fixes:[
+                {fix:'Reset White Balance to Auto (AWB)',why:'Press i → WB → Auto. This works for 80% of situations.'},
+                {fix:'Check Picture Control isn\'t on Monochrome',why:'Press i → Picture Control. If it says "MC" or Monochrome, that\'s why it\'s black & white! Switch to Standard or Vivid.'},
+                {fix:'For mixed light: use Auto and fix in post',why:'No single WB setting works when you have sunlight + neon + fluorescent. Shoot RAW and fix later.'},
+                {fix:'For sunset/golden hour: try "Cloudy" WB',why:'Cloudy white balance adds warmth. Makes golden hour glow even more.'}
+              ]},
+            {problem:'Can\'t focus / focus hunts',emoji:'🔍',color:'#4ade80',
+              causes:['Too dark for AF','Too close (closer than minimum focus distance)','Lens switch set to MF (manual focus)','Plain wall or low contrast subject'],
+              fixes:[
+                {fix:'Check the lens is on AF (not MF)',why:'Look at the switch on the lens barrel. AF = autofocus. MF = manual focus (camera won\'t auto-focus).'},
+                {fix:'Step back — you might be too close',why:'The 16-50mm kit lens can\'t focus closer than ~25cm. Step back 30cm and try again.'},
+                {fix:'Aim at an edge or high-contrast area',why:'AF needs contrast to lock. Aim at the edge of an object, half-press to lock, then recompose.'},
+                {fix:'In very dark scenes: use AF-assist light or manual focus',why:'Menu → Custom → a12 → Built-in AF-assist ON. Or switch to MF and use focus peaking (Menu → Custom → d10).'}
+              ]},
+            {problem:'Photos look flat / boring',emoji:'😐',color:'#eab308',
+              causes:['Harsh midday overhead light','No foreground interest','Center-framing everything','Flat Picture Control'],
+              fixes:[
+                {fix:'Shoot during golden hour (7-8am or 5:30-7pm)',why:'Low sun creates warm light, long shadows, and depth. Midday sun is flat and harsh.'},
+                {fix:'Switch Picture Control to Vivid or Portrait',why:'Press i → Picture Control → Vivid (saturated colors) or Portrait (warm skin tones).'},
+                {fix:'Use the grid — place subjects on the 1/3 lines',why:'Rule of thirds: don\'t center everything. Put eyes or horizon on the grid lines for dynamic composition.'},
+                {fix:'Find a foreground element',why:'Shoot through leaves, between pillars, or over a table — it adds depth and layers to flat scenes.'}
+              ]}
+          ].map((p,i)=>(
+            <details key={i} style={{background:'var(--card)',borderRadius:14,marginBottom:8,border:`1px solid ${p.color}33`,overflow:'hidden'}}>
+              <summary style={{padding:'14px 16px',cursor:'pointer',display:'flex',alignItems:'center',gap:10,listStyle:'none',WebkitAppearance:'none'}}>
+                <span style={{fontSize:22}}>{p.emoji}</span>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:14,fontWeight:700}}>{p.problem}</div>
+                  <div style={{fontSize:10,color:'var(--dim)',marginTop:2}}>{p.causes[0]}</div>
+                </div>
+                <span style={{color:p.color,fontSize:18}}>+</span>
+              </summary>
+              <div style={{padding:'0 16px 14px'}}>
+                <div style={{fontSize:10,fontWeight:700,color:'var(--dim)',letterSpacing:1,marginBottom:6}}>POSSIBLE CAUSES</div>
+                {p.causes.map((c,j)=>(
+                  <div key={j} style={{fontSize:11,color:'var(--muted)',marginBottom:3,paddingLeft:8,borderLeft:'2px solid var(--card3)'}}>• {c}</div>
+                ))}
+                <div style={{fontSize:10,fontWeight:700,color:p.color,letterSpacing:1,marginTop:12,marginBottom:6}}>FIXES (TRY IN ORDER)</div>
+                {p.fixes.map((f,j)=>(
+                  <div key={j} style={{background:'#000',borderRadius:10,padding:10,marginBottom:6}}>
+                    <div style={{fontSize:12,fontWeight:700,color:'var(--text)',marginBottom:2}}>
+                      <span style={{color:p.color,marginRight:6}}>{j+1}.</span>{f.fix}
+                    </div>
+                    <div style={{fontSize:11,color:'var(--muted)',lineHeight:1.4}}>{f.why}</div>
+                  </div>
+                ))}
+              </div>
+            </details>
+          ))}
         </div>
       )}
 
